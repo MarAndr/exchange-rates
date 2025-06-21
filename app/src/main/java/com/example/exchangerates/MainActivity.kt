@@ -14,7 +14,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.exchangerates.ui.common.navigation.Destination
 import com.example.exchangerates.ui.common.theme.AppTheme
 import com.example.exchangerates.ui.rates.RatesScreen
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
