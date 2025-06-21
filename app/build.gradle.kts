@@ -64,6 +64,8 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.gson)
+    implementation(libs.converter.gson)
 
     implementation(libs.androidx.navigation.compose)
 

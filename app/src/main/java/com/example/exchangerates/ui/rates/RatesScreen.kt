@@ -1,5 +1,6 @@
 package com.example.exchangerates.ui.rates
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,6 +19,7 @@ import com.example.exchangerates.ui.rates.state.CurrencyItem
 import com.example.exchangerates.ui.rates.state.RatesScreenEvent
 import com.example.exchangerates.ui.rates.state.RatesScreenState
 import com.example.exchangerates.ui.rates.state.RatesViewModel
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun RatesScreen(
@@ -57,13 +59,14 @@ private fun RatesScreen(
                 LazyColumn(
                     modifier = Modifier
                         .padding(paddingValues),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(
                         items = screenState.currencies,
-                        key = { it.symbol.value }
+                        key = { it.symbol }
                     ) { currency ->
                         CurrencyCard(
-                            currencyCode = currency.symbol.value,
+                            currencyCode = currency.symbol,
                             rate = currency.rate,
                             isFavorite = currency.isFavorite,
                             onFavoriteClick = {
@@ -95,20 +98,17 @@ private fun RatesScreenPreview() = AppTheme {
 private fun RatesScreenSuccessPreview() = AppTheme {
     val mockCurrencies = listOf(
         CurrencyItem(
-            symbol = com.example.exchangerates.domain.model.Symbol.USD,
-            name = "US Dollar",
+            symbol = "USD",
             rate = 1.0,
             isFavorite = true
         ),
         CurrencyItem(
-            symbol = com.example.exchangerates.domain.model.Symbol.EUR,
-            name = "Euro",
+            symbol = "EUR",
             rate = 0.85,
             isFavorite = false
         ),
         CurrencyItem(
-            symbol = com.example.exchangerates.domain.model.Symbol.GBP,
-            name = "British Pound",
+            symbol = "GBP",
             rate = 0.73,
             isFavorite = true
         )

@@ -15,8 +15,7 @@ sealed interface RatesScreenState {
 }
 
 data class CurrencyItem(
-    val symbol: Symbol,
-    val name: String,
+    val symbol: String,
     val rate: Double,
     val isFavorite: Boolean
 )

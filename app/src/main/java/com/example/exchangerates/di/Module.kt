@@ -3,6 +3,8 @@ package com.example.exchangerates.di
 import android.app.Application
 import androidx.room.Room
 import com.example.exchangerates.api.ExchangeApi
+import com.example.exchangerates.data.RatesRepository
+import com.example.exchangerates.data.RatesRepositoryImpl
 import com.example.exchangerates.db.CurrenciesListDao
 import com.example.exchangeratestestapppublic.db.CurrencyDatabase
 import dagger.Module
@@ -11,6 +13,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
 import javax.inject.Singleton
@@ -44,9 +47,17 @@ class NetworkModule() {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://api.apilayer.com/")
             .client(httpClient)
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
         return retrofit.create()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRatesRepository(
+        exchangeApi: ExchangeApi
+    ): RatesRepository {
+        return RatesRepositoryImpl(exchangeApi)
     }
 
     @Provides
