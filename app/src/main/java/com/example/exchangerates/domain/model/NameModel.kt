@@ -1,4 +1,5 @@
-package com.example.exchangeratestestapppublic.domain.model
+package com.example.exchangerates.domain.model
+
 
 data class NameModel(
     val id: Long,

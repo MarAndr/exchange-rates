@@ -1,4 +1,4 @@
-package com.example.exchangeratestestapppublic.domain.model
+package com.example.exchangerates.domain.model
 
 sealed class Symbol(val value: String) {
     object USD : Symbol("USD")

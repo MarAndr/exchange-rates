@@ -2,10 +2,10 @@ package com.example.exchangerates.domain
 
 import com.example.exchangerates.api.ExchangeApi
 import com.example.exchangerates.db.CurrenciesListDao
-import com.example.exchangeratestestapppublic.domain.mapper.NamesDbMapper
-import com.example.exchangeratestestapppublic.domain.model.NameModel
-import com.example.exchangeratestestapppublic.domain.model.RatesModel
-import com.example.exchangeratestestapppublic.domain.model.Symbol
+import com.example.exchangerates.domain.model.Symbol
+import com.example.exchangerates.domain.mapper.NamesDbMapper
+import com.example.exchangerates.domain.model.NameModel
+import com.example.exchangerates.domain.model.RatesModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject

@@ -1,8 +1,8 @@
-package com.example.exchangeratestestapppublic.domain.mapper
+package com.example.exchangerates.domain.mapper
 
+import com.example.exchangerates.domain.model.Symbol
 import com.example.exchangeratestestapppublic.db.model.CurrencyDbModel
-import com.example.exchangeratestestapppublic.domain.model.NameModel
-import com.example.exchangeratestestapppublic.domain.model.Symbol
+import com.example.exchangerates.domain.model.NameModel
 import javax.inject.Inject
 
 class NamesDbMapper @Inject constructor() {

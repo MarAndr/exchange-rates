@@ -2,6 +2,7 @@ package com.example.exchangerates.ui.rates
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -10,10 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.exchangerates.ui.common.theme.AppTheme
+import com.example.exchangerates.ui.rates.state.CurrencyItem
 import com.example.exchangerates.ui.rates.state.RatesScreenEvent
 import com.example.exchangerates.ui.rates.state.RatesScreenState
 import com.example.exchangerates.ui.rates.state.RatesViewModel
@@ -47,12 +48,34 @@ private fun RatesScreen(
             )
         },
     ) { paddingValues ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(paddingValues),
-        ) {
-            item {
-                CurrencyCard("USD", 20.0, true) { }
+        when (screenState) {
+            is RatesScreenState.Loading -> {
+                // TODO: Add loading indicator
+                Text("Loading...")
+            }
+            is RatesScreenState.Success -> {
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(paddingValues),
+                ) {
+                    items(
+                        items = screenState.currencies,
+                        key = { it.symbol.value }
+                    ) { currency ->
+                        CurrencyCard(
+                            currencyCode = currency.symbol.value,
+                            rate = currency.rate,
+                            isFavorite = currency.isFavorite,
+                            onFavoriteClick = {
+                                onEvent(RatesScreenEvent.OnFavoriteClick(currency.symbol))
+                            }
+                        )
+                    }
+                }
+            }
+            is RatesScreenState.Error -> {
+                // TODO: Add error state
+                Text("Error: ${screenState.message}")
             }
         }
     }
@@ -63,6 +86,36 @@ private fun RatesScreen(
 private fun RatesScreenPreview() = AppTheme {
     RatesScreen(
         screenState = RatesScreenState.Loading,
+        onEvent = {},
+    )
+}
+
+@Composable
+@Preview(name = "Success State", showBackground = true, apiLevel = 34)
+private fun RatesScreenSuccessPreview() = AppTheme {
+    val mockCurrencies = listOf(
+        CurrencyItem(
+            symbol = com.example.exchangerates.domain.model.Symbol.USD,
+            name = "US Dollar",
+            rate = 1.0,
+            isFavorite = true
+        ),
+        CurrencyItem(
+            symbol = com.example.exchangerates.domain.model.Symbol.EUR,
+            name = "Euro",
+            rate = 0.85,
+            isFavorite = false
+        ),
+        CurrencyItem(
+            symbol = com.example.exchangerates.domain.model.Symbol.GBP,
+            name = "British Pound",
+            rate = 0.73,
+            isFavorite = true
+        )
+    )
+    
+    RatesScreen(
+        screenState = RatesScreenState.Success(mockCurrencies),
         onEvent = {},
     )
 }
