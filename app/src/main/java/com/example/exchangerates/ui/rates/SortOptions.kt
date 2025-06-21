@@ -20,22 +20,28 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.exchangerates.R
+import com.example.exchangerates.ui.common.theme.AppTheme
 
 @Composable
 fun SortOptions(
     selectedOption: SortOption,
     onOptionSelected: (SortOption) -> Unit
 ) {
+    val appColors = AppTheme.color
     Column(modifier = Modifier.padding(16.dp)) {
         Text(
-            text = "SORT BY",
+            text = stringResource(R.string.sort_by),
             style = MaterialTheme.typography.labelMedium.copy(
                 fontWeight = FontWeight.Bold,
-                color = Color.Gray
-            )
+                color = appColors.mainColors.textSecondary,
+            ),
+            fontSize = 12.sp,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -50,16 +56,17 @@ fun SortOptions(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = option.label,
+                    text = stringResource(option.labelResId),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color.Black
+                    fontSize = 16.sp,
+                    color = appColors.mainColors.textDefault,
                 )
                 RadioButton(
                     selected = selectedOption == option,
                     onClick = { onOptionSelected(option) },
                     colors = RadioButtonDefaults.colors(
-                        selectedColor = Color(0xFF0023A0), // насыщенный синий
-                        unselectedColor = Color(0xFFB0BFE5) // светло-синий
+                        selectedColor = appColors.mainColors.primary,
+                        unselectedColor = appColors.mainColors.secondary,
                     )
                 )
             }
@@ -67,21 +74,23 @@ fun SortOptions(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, apiLevel = 34)
 @Composable
 fun SortOptionsPreview() {
-    var selectedOption by remember { mutableStateOf(SortOption.CodeAZ) }
+    AppTheme {
+        var selectedOption by remember { mutableStateOf(SortOption.CodeAZ) }
 
-    SortOptions(
-        selectedOption = selectedOption,
-        onOptionSelected = { selectedOption = it }
-    )
+        SortOptions(
+            selectedOption = selectedOption,
+            onOptionSelected = { selectedOption = it }
+        )
+    }
 }
 
-enum class SortOption(val label: String) {
-    CodeAZ("Code A–Z"),
-    CodeZA("Code Z–A"),
-    QuoteAsc("Quote Asc."),
-    QuoteDesc("Quote Desc.")
+enum class SortOption(val labelResId: Int) {
+    CodeAZ(R.string.sort_code_az),
+    CodeZA(R.string.sort_code_za),
+    QuoteAsc(R.string.sort_quote_asc),
+    QuoteDesc(R.string.sort_quote_desc)
 }
 

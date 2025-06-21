@@ -9,7 +9,9 @@ private val BackgroundColorTokens = BackgroundColors(
 
 private val MainColorTokens = MainColors(
     primary = Color(0xFF0A2FA7),
-    textDefault = Color(0xFF343138)
+    secondary = Color(0xFF9DACDC),
+    textDefault = Color(0xFF343138),
+    textSecondary = Color(0xFF767676),
 )
 
 internal val AppColorTokens = AppColors(

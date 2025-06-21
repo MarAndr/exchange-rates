@@ -9,6 +9,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -58,7 +59,7 @@ private fun RatesScreen(
 }
 
 @Composable
-@PreviewLightDark
+@Preview(showBackground = true, apiLevel = 34)
 private fun RatesScreenPreview() = AppTheme {
     RatesScreen(
         screenState = RatesScreenState.Loading,
