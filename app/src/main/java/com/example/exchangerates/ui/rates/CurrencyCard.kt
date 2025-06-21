@@ -28,7 +28,7 @@ fun CurrencyCard(
     isFavorite: Boolean,
     onFavoriteClick: () -> Unit
 ) {
-    val backgroundColor = Color(0xF5F6F9FF) // светло-серый фон с прозрачностью
+    val backgroundColor = Color(0xF5F6F9FF)
 
     Row(
         modifier = Modifier
@@ -43,7 +43,7 @@ fun CurrencyCard(
             text = currencyCode,
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Medium,
-            color = Color(0xFF222222) // можно настроить под вашу палитру
+            color = Color(0xFF222222)
         )
 
         Row(verticalAlignment = Alignment.CenterVertically) {
