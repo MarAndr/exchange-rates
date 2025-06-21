@@ -8,9 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -19,9 +16,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.exchangerates.R
 import com.example.exchangerates.ui.common.theme.AppTheme
 
 @Composable
@@ -36,7 +36,6 @@ fun CurrencyCard(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(56.dp)
             .background(color = appColors.bg.card, shape = RoundedCornerShape(12.dp))
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -46,7 +45,8 @@ fun CurrencyCard(
             text = currencyCode,
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Medium,
-            color = Color(0xFF222222)
+            fontSize = 14.sp,
+            color = appColors.mainColors.textDefault,
         )
 
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -54,14 +54,17 @@ fun CurrencyCard(
                 text = String.format("%.6f", rate),
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.SemiBold,
-                color = Color(0xFF222222)
+                fontSize = 16.sp,
+                color = appColors.mainColors.textDefault,
             )
 
             IconButton(onClick = onFavoriteClick) {
                 Icon(
-                    imageVector = if (isFavorite) Icons.Filled.Star else Icons.Outlined.Star,
+                    painter = painterResource(
+                        id = if (isFavorite) R.drawable.ic_favorite_on else R.drawable.ic_favorites_off
+                    ),
                     contentDescription = "Favorite",
-                    tint = if (isFavorite) Color(0xFFFFC107) else Color(0xFF90A4AE)
+                    tint = Color.Unspecified
                 )
             }
         }

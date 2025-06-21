@@ -14,5 +14,5 @@ data class BackgroundColors(
 
 data class MainColors(
     val primary: Color,
-    // todo
+    val textDefault: Color,
 )
