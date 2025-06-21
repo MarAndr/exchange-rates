@@ -10,6 +10,7 @@ data class AppColors(
 data class BackgroundColors(
     val default: Color,
     val card: Color,
+    val header: Color,
 )
 
 data class MainColors(

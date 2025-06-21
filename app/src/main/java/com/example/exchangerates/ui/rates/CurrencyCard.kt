@@ -84,44 +84,6 @@ private fun CurrencyCardUsdFavoritePreview() {
     }
 }
 
-@Preview(name = "EUR - Not Favorite", showBackground = true, apiLevel = 34)
-@Composable
-private fun CurrencyCardEurNotFavoritePreview() {
-    AppTheme {
-        CurrencyCard(
-            currencyCode = "EUR",
-            rate = 0.987654,
-            isFavorite = false,
-            onFavoriteClick = {}
-        )
-    }
-}
-
-@Preview(name = "GBP - High Rate", showBackground = true, apiLevel = 34)
-@Composable
-private fun CurrencyCardGbpHighRatePreview() {
-    AppTheme {
-        CurrencyCard(
-            currencyCode = "GBP",
-            rate = 2.123456,
-            isFavorite = true,
-            onFavoriteClick = {}
-        )
-    }
-}
-
-@Preview(name = "JPY - Low Rate", showBackground = true, apiLevel = 34)
-@Composable
-private fun CurrencyCardJpyLowRatePreview() {
-    AppTheme {
-        CurrencyCard(
-            currencyCode = "JPY",
-            rate = 0.001234,
-            isFavorite = false,
-            onFavoriteClick = {}
-        )
-    }
-}
 
 @Preview(name = "Multiple Currency Cards", showBackground = true, apiLevel = 34)
 @Composable
