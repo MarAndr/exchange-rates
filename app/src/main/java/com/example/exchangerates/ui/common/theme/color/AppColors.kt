@@ -9,7 +9,7 @@ data class AppColors(
 
 data class BackgroundColors(
     val default: Color,
-    // todo
+    val card: Color,
 )
 
 data class MainColors(

@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 
 private val BackgroundColorTokens = BackgroundColors(
     default = Color(0xFFFFFFFF),
-    // todo
+    card = Color(0xFFF0F2F8),
 )
 
 private val MainColorTokens = MainColors(

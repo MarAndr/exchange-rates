@@ -2,6 +2,7 @@ package com.example.exchangerates.ui.rates
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,7 +20,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.exchangerates.ui.common.theme.AppTheme
 
 @Composable
 fun CurrencyCard(
@@ -28,13 +31,13 @@ fun CurrencyCard(
     isFavorite: Boolean,
     onFavoriteClick: () -> Unit
 ) {
-    val backgroundColor = Color(0xF5F6F9FF)
+    val appColors = AppTheme.color
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp)
-            .background(color = backgroundColor, shape = RoundedCornerShape(12.dp))
+            .background(color = appColors.bg.card, shape = RoundedCornerShape(12.dp))
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -61,6 +64,96 @@ fun CurrencyCard(
                     tint = if (isFavorite) Color(0xFFFFC107) else Color(0xFF90A4AE)
                 )
             }
+        }
+    }
+}
+
+@Preview(name = "USD - Favorite", showBackground = true, apiLevel = 34)
+@Composable
+private fun CurrencyCardUsdFavoritePreview() {
+    AppTheme {
+        CurrencyCard(
+            currencyCode = "USD",
+            rate = 1.234567,
+            isFavorite = true,
+            onFavoriteClick = {}
+        )
+    }
+}
+
+@Preview(name = "EUR - Not Favorite", showBackground = true, apiLevel = 34)
+@Composable
+private fun CurrencyCardEurNotFavoritePreview() {
+    AppTheme {
+        CurrencyCard(
+            currencyCode = "EUR",
+            rate = 0.987654,
+            isFavorite = false,
+            onFavoriteClick = {}
+        )
+    }
+}
+
+@Preview(name = "GBP - High Rate", showBackground = true, apiLevel = 34)
+@Composable
+private fun CurrencyCardGbpHighRatePreview() {
+    AppTheme {
+        CurrencyCard(
+            currencyCode = "GBP",
+            rate = 2.123456,
+            isFavorite = true,
+            onFavoriteClick = {}
+        )
+    }
+}
+
+@Preview(name = "JPY - Low Rate", showBackground = true, apiLevel = 34)
+@Composable
+private fun CurrencyCardJpyLowRatePreview() {
+    AppTheme {
+        CurrencyCard(
+            currencyCode = "JPY",
+            rate = 0.001234,
+            isFavorite = false,
+            onFavoriteClick = {}
+        )
+    }
+}
+
+@Preview(name = "Multiple Currency Cards", showBackground = true, apiLevel = 34)
+@Composable
+private fun MultipleCurrencyCardsPreview() {
+    AppTheme {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            CurrencyCard(
+                currencyCode = "USD",
+                rate = 1.234567,
+                isFavorite = true,
+                onFavoriteClick = {}
+            )
+            CurrencyCard(
+                currencyCode = "EUR",
+                rate = 0.987654,
+                isFavorite = false,
+                onFavoriteClick = {}
+            )
+            CurrencyCard(
+                currencyCode = "GBP",
+                rate = 2.123456,
+                isFavorite = true,
+                onFavoriteClick = {}
+            )
+            CurrencyCard(
+                currencyCode = "JPY",
+                rate = 0.001234,
+                isFavorite = false,
+                onFavoriteClick = {}
+            )
         }
     }
 }
