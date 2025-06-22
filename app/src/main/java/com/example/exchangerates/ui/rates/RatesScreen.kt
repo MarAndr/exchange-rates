@@ -53,7 +53,6 @@ fun RatesScreen(
 
     RatesScreen(
         screenState = screenState,
-        baseCurrency = "USD", //todo передать сохранённую базовую валюту
         onEvent = viewModel::onEvent,
     )
 }
@@ -62,9 +61,14 @@ fun RatesScreen(
 @Composable
 private fun RatesScreen(
     screenState: RatesScreenState,
-    baseCurrency: String,
     onEvent: (RatesScreenEvent) -> Unit,
 ) {
+    val baseCurrency = when (screenState) {
+        is RatesScreenState.Loading -> screenState.baseCurrency
+        is RatesScreenState.Success -> screenState.baseCurrency
+        is RatesScreenState.Error -> screenState.baseCurrency
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -136,8 +140,7 @@ private fun RatesScreen(
 @Preview(showBackground = true, apiLevel = 34)
 private fun RatesScreenPreview() = AppTheme {
     RatesScreen(
-        screenState = RatesScreenState.Loading,
-        baseCurrency = "USD",
+        screenState = RatesScreenState.Loading("USD"),
         onEvent = {},
     )
 }
@@ -164,8 +167,10 @@ private fun RatesScreenSuccessPreview() = AppTheme {
     )
     
     RatesScreen(
-        screenState = RatesScreenState.Success(mockCurrencies),
-        baseCurrency = "USD",
+        screenState = RatesScreenState.Success(
+            baseCurrency = "USD",
+            currencies = mockCurrencies
+        ),
         onEvent = {},
     )
 }

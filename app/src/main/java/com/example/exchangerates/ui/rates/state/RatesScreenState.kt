@@ -1,15 +1,18 @@
 package com.example.exchangerates.ui.rates.state
 
-import com.example.exchangerates.domain.model.Symbol
 
 sealed interface RatesScreenState {
-    data object Loading : RatesScreenState
+    data class Loading(
+        val baseCurrency: String
+    ) : RatesScreenState
     
     data class Success(
+        val baseCurrency: String,
         val currencies: List<CurrencyItem>
     ) : RatesScreenState
     
     data class Error(
+        val baseCurrency: String,
         val message: String
     ) : RatesScreenState
 }

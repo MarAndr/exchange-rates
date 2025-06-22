@@ -15,32 +15,43 @@ class RatesViewModel @Inject constructor(
     private val repository: RatesRepository,
 ) : ViewModel() {
 
-    private val _screenState = MutableStateFlow<RatesScreenState>(RatesScreenState.Loading)
+    private val _screenState = MutableStateFlow<RatesScreenState>(RatesScreenState.Loading("USD"))
     val screenState: StateFlow<RatesScreenState> = _screenState
-
-    private val _baseCurrency = MutableStateFlow("USD")
-    val baseCurrency: StateFlow<String> = _baseCurrency
 
     init {
         loadCurrencies()
     }
 
     private fun onBaseCurrencyChanged(newBaseCurrency: String) {
-        if (_baseCurrency.value != newBaseCurrency) {
-            _baseCurrency.value = newBaseCurrency
-            loadCurrencies()
+        val currentState = _screenState.value
+        if (getBaseCurrency(currentState) != newBaseCurrency) {
+            loadCurrencies(newBaseCurrency)
         }
     }
 
-    private fun loadCurrencies() {
+    private fun getBaseCurrency(state: RatesScreenState): String {
+        return when (state) {
+            is RatesScreenState.Loading -> state.baseCurrency
+            is RatesScreenState.Success -> state.baseCurrency
+            is RatesScreenState.Error -> state.baseCurrency
+        }
+    }
+
+    private fun loadCurrencies(baseCurrency: String = "USD") {
         viewModelScope.launch {
-            _screenState.value = RatesScreenState.Loading
+            _screenState.value = RatesScreenState.Loading(baseCurrency)
 
             try {
-                val response = repository.getLatestCurrencies(_baseCurrency.value)
-                _screenState.value = RatesScreenState.Success(currencies = response)
+                val response = repository.getLatestCurrencies(baseCurrency)
+                _screenState.value = RatesScreenState.Success(
+                    baseCurrency = baseCurrency,
+                    currencies = response
+                )
             } catch (e: Exception) {
-                _screenState.value = RatesScreenState.Error(e.message.toString())
+                _screenState.value = RatesScreenState.Error(
+                    baseCurrency = baseCurrency,
+                    message = e.message.toString()
+                )
             }
         }
     }
