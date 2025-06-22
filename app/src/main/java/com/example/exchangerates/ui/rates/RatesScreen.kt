@@ -48,12 +48,14 @@ import com.example.exchangerates.ui.rates.state.RatesViewModel
 @Composable
 fun RatesScreen(
     viewModel: RatesViewModel = hiltViewModel(),
+    onFilterClick: () -> Unit = {},
 ) {
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
 
     RatesScreen(
         screenState = screenState,
         onEvent = viewModel::onEvent,
+        onFilterClick = onFilterClick,
     )
 }
 
@@ -62,6 +64,7 @@ fun RatesScreen(
 private fun RatesScreen(
     screenState: RatesScreenState,
     onEvent: (RatesScreenEvent) -> Unit,
+    onFilterClick: () -> Unit,
 ) {
     val baseCurrency = when (screenState) {
         is RatesScreenState.Loading -> screenState.baseCurrency
@@ -90,7 +93,7 @@ private fun RatesScreen(
             CurrencySelector(
                 baseCurrency = baseCurrency,
                 onBaseCurrencyChanged = { onEvent(RatesScreenEvent.OnBaseCurrencyChanged(it)) },
-                onFilterClick = { /* TODO */ },
+                onFilterClick = onFilterClick,
             )
 
             Spacer(Modifier.height(12.dp))
@@ -142,6 +145,7 @@ private fun RatesScreenPreview() = AppTheme {
     RatesScreen(
         screenState = RatesScreenState.Loading("USD"),
         onEvent = {},
+        onFilterClick = {},
     )
 }
 
@@ -172,5 +176,6 @@ private fun RatesScreenSuccessPreview() = AppTheme {
             currencies = mockCurrencies
         ),
         onEvent = {},
+        onFilterClick = {},
     )
 }

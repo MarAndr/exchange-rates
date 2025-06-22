@@ -1,4 +1,4 @@
-package com.example.exchangerates.ui.rates
+package com.example.exchangerates.ui.filters
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,6 +29,7 @@ import com.example.exchangerates.ui.common.theme.AppTheme
 
 @Composable
 fun SortOptions(
+    modifier: Modifier = Modifier,
     selectedOption: SortOption,
     onOptionSelected: (SortOption) -> Unit
 ) {

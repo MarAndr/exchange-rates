@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.exchangerates.ui.common.navigation.Destination
 import com.example.exchangerates.ui.common.theme.AppTheme
+import com.example.exchangerates.ui.filters.FiltersScreen
 import com.example.exchangerates.ui.rates.RatesScreen
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -31,7 +32,20 @@ class MainActivity : ComponentActivity() {
                     startDestination = Destination.Main,
                 ) {
                     composable<Destination.Main> {
-                        RatesScreen()
+                        RatesScreen(
+                            onFilterClick = {
+                                navController.navigate(Destination.Filters)
+                            }
+                        )
+                    }
+                    
+                    composable<Destination.Filters> {
+                        FiltersScreen(
+                            onBackClick = {
+                                navController.popBackStack()
+                            },
+                            onOptionsSelected = {} //todo
+                        )
                     }
                 }
             }
