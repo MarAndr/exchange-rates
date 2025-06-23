@@ -1,9 +1,9 @@
-package com.example.exchangeratestestapppublic.db
+package com.example.exchangerates.core.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.exchangerates.db.CurrenciesListDao
-import com.example.exchangeratestestapppublic.db.model.CurrencyDbModel
+import com.example.exchangerates.features.rates.impl.db.CurrenciesListDao
+import com.example.exchangerates.features.rates.impl.db.CurrencyDbModel
 
 @Database(
     entities = [CurrencyDbModel::class],

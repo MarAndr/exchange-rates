@@ -4,7 +4,7 @@ package com.example.exchangerates.ui.rates.state
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.exchangerates.data.RatesRepository
+import com.example.exchangerates.features.rates.api.RatesRepository
 import com.example.exchangerates.features.common.loading.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi

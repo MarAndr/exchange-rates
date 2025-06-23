@@ -1,7 +1,7 @@
 package com.example.exchangerates.ui.rates.preview
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import com.example.exchangerates.ui.rates.state.RatesItem
+import com.example.exchangerates.features.rates.api.model.RatesItem
 import com.example.exchangerates.ui.rates.state.RatesScreenState
 
 internal class RatesScreenPreviewParamsProvider: PreviewParameterProvider<RatesScreenState> {

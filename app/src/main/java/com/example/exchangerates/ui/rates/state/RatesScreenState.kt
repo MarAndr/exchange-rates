@@ -1,5 +1,7 @@
 package com.example.exchangerates.ui.rates.state
 
+import com.example.exchangerates.features.rates.api.model.RatesItem
+
 
 sealed interface RatesScreenState {
     data object Loading : RatesScreenState
@@ -11,9 +13,3 @@ sealed interface RatesScreenState {
 
     data object Error : RatesScreenState
 }
-
-data class RatesItem(
-    val symbol: String,
-    val rate: Double,
-    val isFavorite: Boolean
-)

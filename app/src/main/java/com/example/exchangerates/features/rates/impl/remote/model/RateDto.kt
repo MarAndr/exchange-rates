@@ -1,4 +1,4 @@
-package com.example.exchangerates.api.model
+package com.example.exchangerates.features.rates.impl.remote.model
 
 import java.util.Date
 

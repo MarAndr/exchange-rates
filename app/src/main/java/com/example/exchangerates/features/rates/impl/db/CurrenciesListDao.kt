@@ -1,4 +1,4 @@
-package com.example.exchangerates.db
+package com.example.exchangerates.features.rates.impl.db
 
 
 import androidx.room.Dao
@@ -6,7 +6,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.example.exchangeratestestapppublic.db.model.CurrencyDbModel
 import kotlinx.coroutines.flow.Flow
 
 @Dao

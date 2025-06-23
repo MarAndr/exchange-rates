@@ -1,7 +1,7 @@
-package com.example.exchangerates.data
+package com.example.exchangerates.features.rates.api
 
 import com.example.exchangerates.features.common.loading.LoadingState
-import com.example.exchangerates.ui.rates.state.RatesItem
+import com.example.exchangerates.features.rates.api.model.RatesItem
 import kotlinx.coroutines.flow.Flow
 
 interface RatesRepository {

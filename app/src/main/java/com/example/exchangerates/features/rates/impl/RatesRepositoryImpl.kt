@@ -1,8 +1,9 @@
-package com.example.exchangerates.data
+package com.example.exchangerates.features.rates.impl
 
-import com.example.exchangerates.api.ExchangeApi
+import com.example.exchangerates.features.rates.impl.remote.ExchangeApi
 import com.example.exchangerates.features.common.loading.LoadingState
-import com.example.exchangerates.ui.rates.state.RatesItem
+import com.example.exchangerates.features.rates.api.RatesRepository
+import com.example.exchangerates.features.rates.api.model.RatesItem
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
