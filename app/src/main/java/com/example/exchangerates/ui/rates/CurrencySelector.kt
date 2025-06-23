@@ -65,11 +65,13 @@ fun CurrencySelector(
                 ) {
                     Text(
                         text = baseCurrency,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        color = AppTheme.color.mainColors.textDefault,
                     )
                     Icon(
                         painter = painterResource(id = if (expanded) R.drawable.ic_arrow_up else R.drawable.ic_arrow_down),
-                        contentDescription = "Dropdown"
+                        contentDescription = "Dropdown",
+                        tint = AppTheme.color.mainColors.primary,
                     )
                 }
             }
@@ -101,7 +103,8 @@ fun CurrencySelector(
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_filter),
-                contentDescription = "Filter"
+                contentDescription = "Filter",
+                tint = AppTheme.color.mainColors.primary,
             )
         }
     }

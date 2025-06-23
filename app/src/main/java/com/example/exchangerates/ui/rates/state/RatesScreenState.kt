@@ -2,22 +2,17 @@ package com.example.exchangerates.ui.rates.state
 
 
 sealed interface RatesScreenState {
-    data class Loading(
-        val baseCurrency: String
-    ) : RatesScreenState
-    
+    data object Loading : RatesScreenState
+
     data class Success(
         val baseCurrency: String,
-        val currencies: List<CurrencyItem>
+        val rates: List<RatesItem>
     ) : RatesScreenState
-    
-    data class Error(
-        val baseCurrency: String,
-        val message: String
-    ) : RatesScreenState
+
+    data object Error : RatesScreenState
 }
 
-data class CurrencyItem(
+data class RatesItem(
     val symbol: String,
     val rate: Double,
     val isFavorite: Boolean

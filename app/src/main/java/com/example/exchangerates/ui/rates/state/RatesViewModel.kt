@@ -1,13 +1,20 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.example.exchangerates.ui.rates.state
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.exchangerates.data.RatesRepository
+import com.example.exchangerates.features.common.loading.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
@@ -15,60 +22,44 @@ class RatesViewModel @Inject constructor(
     private val repository: RatesRepository,
 ) : ViewModel() {
 
-    private val _screenState = MutableStateFlow<RatesScreenState>(RatesScreenState.Loading("USD"))
-    val screenState: StateFlow<RatesScreenState> = _screenState
+    private val baseCurrency: MutableStateFlow<String?> = MutableStateFlow(null)
 
-    init {
-        loadCurrencies()
-    }
-
-    private fun onBaseCurrencyChanged(newBaseCurrency: String) {
-        val currentState = _screenState.value
-        if (getBaseCurrency(currentState) != newBaseCurrency) {
-            loadCurrencies(newBaseCurrency)
+    private val ratesFlow = baseCurrency
+        .filterNotNull()
+        .flatMapLatest { baseCurrency ->
+            repository.getLatestRates(baseCurrency)
         }
-    }
 
-    private fun getBaseCurrency(state: RatesScreenState): String {
-        return when (state) {
-            is RatesScreenState.Loading -> state.baseCurrency
-            is RatesScreenState.Success -> state.baseCurrency
-            is RatesScreenState.Error -> state.baseCurrency
+    val screenState: StateFlow<RatesScreenState> = combine(
+        baseCurrency.filterNotNull(),
+        ratesFlow,
+    ) { baseCurrency, latestCurrenciesState ->
+        when(latestCurrenciesState) {
+            LoadingState.Loading -> RatesScreenState.Loading
+            LoadingState.Error -> RatesScreenState.Error
+            is LoadingState.Success -> RatesScreenState.Success(
+                baseCurrency = baseCurrency,
+                rates = latestCurrenciesState.data,
+            )
         }
-    }
-
-    private fun loadCurrencies(baseCurrency: String = "USD") {
-        viewModelScope.launch {
-            _screenState.value = RatesScreenState.Loading(baseCurrency)
-
-            try {
-                val response = repository.getLatestCurrencies(baseCurrency)
-                _screenState.value = RatesScreenState.Success(
-                    baseCurrency = baseCurrency,
-                    currencies = response
-                )
-            } catch (e: Exception) {
-                _screenState.value = RatesScreenState.Error(
-                    baseCurrency = baseCurrency,
-                    message = e.message.toString()
-                )
-            }
-        }
-    }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = RatesScreenState.Loading
+    )
 
     fun onEvent(event: RatesScreenEvent) {
         when (event) {
             is RatesScreenEvent.OnFavoriteClick -> {
                 // TODO: Implement favorite toggle
             }
-            is RatesScreenEvent.OnScreenLoad -> {
-                loadCurrencies()
-            }
+
             is RatesScreenEvent.OnRefresh -> {
-                loadCurrencies()
+                // todo
             }
+
             is RatesScreenEvent.OnBaseCurrencyChanged -> {
-                onBaseCurrencyChanged(event.newBaseCurrency)
+                baseCurrency.value = event.newBaseCurrency
             }
         }
     }

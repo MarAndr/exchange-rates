@@ -1,7 +1,6 @@
 package com.example.exchangerates.api.model
 
-import com.example.exchangerates.domain.model.Symbol
-import java.util.*
+import java.util.Date
 
 data class RateDto(
     val id: Long = 0,
@@ -9,5 +8,5 @@ data class RateDto(
     val timestamp: Long?,
     val base: String?,
     val date: Date?,
-    val rates: Map<String, Double>?,
+    val rates: Map<String, Double>,
 )
