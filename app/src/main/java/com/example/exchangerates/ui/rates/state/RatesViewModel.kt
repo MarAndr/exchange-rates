@@ -2,11 +2,10 @@
 
 package com.example.exchangerates.ui.rates.state
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.exchangerates.features.rates.api.RatesRepository
 import com.example.exchangerates.features.common.loading.LoadingState
+import com.example.exchangerates.features.rates.api.RatesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,6 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
@@ -32,22 +32,27 @@ class RatesViewModel @Inject constructor(
         }
 
     private val currenciesFlow = repository.getCurrencyList()
+        .onEach { state ->
+            if (state is LoadingState.Success) {
+                baseCurrency.value = state.data.firstOrNull()?.symbol
+            }
+        }
 
     val screenState: StateFlow<RatesScreenState> = combine(
         baseCurrency.filterNotNull(),
         ratesFlow,
         currenciesFlow,
-    ) { baseCurrency, latestCurrenciesState, currenciesState ->
-        when(latestCurrenciesState) {
+    ) { baseCurrency, ratesState, currenciesState ->
+        when (currenciesState) {
             LoadingState.Loading -> RatesScreenState.Loading
             LoadingState.Error -> RatesScreenState.Error
             is LoadingState.Success -> {
-                when (currenciesState) {
+                when (ratesState) {
                     LoadingState.Loading -> RatesScreenState.Loading
                     LoadingState.Error -> RatesScreenState.Error
                     is LoadingState.Success -> RatesScreenState.Success(
                         baseCurrency = baseCurrency,
-                        rates = latestCurrenciesState.data,
+                        rates = ratesState.data,
                         availableCurrencies = currenciesState.data,
                     )
                 }

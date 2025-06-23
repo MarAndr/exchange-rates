@@ -12,7 +12,7 @@ import javax.inject.Inject
 class RatesRepositoryImpl @Inject constructor(
     private val exchangeApi: ExchangeApi,
 ) : RatesRepository {
-    override suspend fun getLatestRates(baseCurrency: String) = apiCall(
+    override fun getLatestRates(baseCurrency: String) = apiCall(
         mapper = { rates ->
             rates.rates.map { (symbol, rate) ->
                 RatesItem(
@@ -25,7 +25,7 @@ class RatesRepositoryImpl @Inject constructor(
         call = { exchangeApi.getLatestCurrency(baseCurrency, null) },
     )
 
-    override suspend fun getCurrencyList(): Flow<LoadingState<List<Currency>>> = apiCall(
+    override fun getCurrencyList(): Flow<LoadingState<List<Currency>>> = apiCall(
         mapper = { currencyList ->
             currencyList.symbols?.map { (symbol, name) ->
                 Currency(

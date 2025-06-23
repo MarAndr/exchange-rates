@@ -6,10 +6,12 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -44,7 +46,7 @@ fun CurrencyCard(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = appColors.bg.card, shape = RoundedCornerShape(12.dp))
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -64,6 +66,8 @@ fun CurrencyCard(
                 fontSize = 16.sp,
                 color = appColors.mainColors.textDefault,
             )
+
+            Spacer(Modifier.width(16.dp))
 
             Icon(
                 modifier = Modifier

@@ -29,10 +29,12 @@ internal class RatesScreenPreviewParamsProvider: PreviewParameterProvider<RatesS
         RatesScreenState.Success(
             baseCurrency = "USD",
             rates = mockRates,
+            availableCurrencies = emptyList()
         ),
         RatesScreenState.Success(
             baseCurrency = "USD",
             rates = mockRates.take(1),
+            availableCurrencies = emptyList()
         ),
     )
 }
