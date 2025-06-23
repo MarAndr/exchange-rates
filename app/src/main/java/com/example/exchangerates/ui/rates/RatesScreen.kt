@@ -89,6 +89,7 @@ private fun RatesScreen(
                     Spacer(Modifier.height(8.dp))
                     CurrencySelector(
                         baseCurrency = screenState.baseCurrency,
+                        availableCurrencies = screenState.availableCurrencies,
                         onBaseCurrencyChanged = { onEvent(RatesScreenEvent.OnBaseCurrencyChanged(it)) },
                         onFilterClick = onFilterClick,
                     )

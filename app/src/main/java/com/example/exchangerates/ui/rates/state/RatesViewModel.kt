@@ -2,6 +2,7 @@
 
 package com.example.exchangerates.ui.rates.state
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.exchangerates.features.rates.api.RatesRepository
@@ -30,17 +31,27 @@ class RatesViewModel @Inject constructor(
             repository.getLatestRates(baseCurrency)
         }
 
+    private val currenciesFlow = repository.getCurrencyList()
+
     val screenState: StateFlow<RatesScreenState> = combine(
         baseCurrency.filterNotNull(),
         ratesFlow,
-    ) { baseCurrency, latestCurrenciesState ->
+        currenciesFlow,
+    ) { baseCurrency, latestCurrenciesState, currenciesState ->
         when(latestCurrenciesState) {
             LoadingState.Loading -> RatesScreenState.Loading
             LoadingState.Error -> RatesScreenState.Error
-            is LoadingState.Success -> RatesScreenState.Success(
-                baseCurrency = baseCurrency,
-                rates = latestCurrenciesState.data,
-            )
+            is LoadingState.Success -> {
+                when (currenciesState) {
+                    LoadingState.Loading -> RatesScreenState.Loading
+                    LoadingState.Error -> RatesScreenState.Error
+                    is LoadingState.Success -> RatesScreenState.Success(
+                        baseCurrency = baseCurrency,
+                        rates = latestCurrenciesState.data,
+                        availableCurrencies = currenciesState.data,
+                    )
+                }
+            }
         }
     }.stateIn(
         scope = viewModelScope,

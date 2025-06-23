@@ -28,18 +28,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.exchangerates.R
+import com.example.exchangerates.features.rates.api.model.Currency
 import com.example.exchangerates.ui.common.theme.AppTheme
 
 @Composable
 fun CurrencySelector(
     baseCurrency: String,
+    availableCurrencies: List<Currency>,
     onBaseCurrencyChanged: (String) -> Unit,
     onFilterClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
-    // todo взять из viewModel
-    val availableCurrencies = listOf("USD", "EUR", "GBP", "JPY", "RUB")
 
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -84,9 +84,9 @@ fun CurrencySelector(
         ) {
             availableCurrencies.forEach { currency ->
                 DropdownMenuItem(
-                    text = { Text(currency) },
+                    text = { Text(currency.symbol) },
                     onClick = {
-                        onBaseCurrencyChanged(currency)
+                        onBaseCurrencyChanged(currency.symbol)
                         expanded = false
                     }
                 )
@@ -121,6 +121,10 @@ fun CurrencySelectorPreview() {
     AppTheme {
         CurrencySelector(
             baseCurrency = "USD",
+            availableCurrencies = listOf(
+                com.example.exchangerates.features.rates.api.model.Currency("US Dollar", "USD"),
+                com.example.exchangerates.features.rates.api.model.Currency("Euro", "EUR")
+            ),
             onBaseCurrencyChanged = {},
             onFilterClick = {}
         )
