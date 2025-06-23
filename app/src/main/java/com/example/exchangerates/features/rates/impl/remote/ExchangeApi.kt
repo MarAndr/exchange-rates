@@ -1,7 +1,7 @@
 package com.example.exchangerates.features.rates.impl.remote
 
 import com.example.exchangerates.core.remote.Constants
-import com.example.exchangerates.features.rates.impl.remote.model.NamesApiModel
+import com.example.exchangerates.features.rates.impl.remote.model.CurrencyListDto
 import com.example.exchangerates.features.rates.impl.remote.model.RateDto
 import retrofit2.http.GET
 import retrofit2.http.Headers
@@ -18,5 +18,5 @@ interface ExchangeApi {
 
     @GET("exchangerates_data/symbols")
     @Headers("apikey: ${Constants.API_KEY}") // todo: interceptor
-    suspend fun getCurrencyNamesList(): NamesApiModel
+    suspend fun getCurrencyNamesList(): CurrencyListDto
 }
