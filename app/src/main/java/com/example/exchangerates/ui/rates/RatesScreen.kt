@@ -107,7 +107,13 @@ private fun RatesScreen(
                                 rate = currency.rate,
                                 isFavorite = currency.isFavorite,
                                 onFavoriteClick = {
-                                    onEvent(RatesScreenEvent.OnFavoriteClick(currency.symbol))
+                                    onEvent(
+                                        RatesScreenEvent.OnFavoriteClick(
+                                            baseCurrency = screenState.baseCurrency,
+                                            rate = currency,
+                                            wasFavorite = currency.isFavorite,
+                                        )
+                                    )
                                 }
                             )
                         }

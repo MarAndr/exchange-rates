@@ -9,7 +9,7 @@ sealed interface RatesScreenState {
 
     data class Success(
         val baseCurrency: String,
-        val rates: List<RatesItem>,
+        val rates: List<RatesUiModel>,
         val availableCurrencies: List<Currency>
     ) : RatesScreenState
 

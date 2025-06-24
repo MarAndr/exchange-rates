@@ -65,6 +65,8 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation(libs.gson)
+    implementation(libs.retrofit.loggingInterceptor)
+
     implementation(libs.converter.gson)
 
     implementation(libs.androidx.navigation.compose)

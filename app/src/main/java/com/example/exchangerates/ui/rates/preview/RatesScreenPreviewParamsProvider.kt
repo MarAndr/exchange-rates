@@ -1,25 +1,25 @@
 package com.example.exchangerates.ui.rates.preview
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import com.example.exchangerates.features.rates.api.model.RatesItem
 import com.example.exchangerates.ui.rates.state.RatesScreenState
+import com.example.exchangerates.ui.rates.state.RatesUiModel
 
-internal class RatesScreenPreviewParamsProvider: PreviewParameterProvider<RatesScreenState> {
+internal class RatesScreenPreviewParamsProvider : PreviewParameterProvider<RatesScreenState> {
     private val mockRates = listOf(
-        RatesItem(
+        RatesUiModel(
             symbol = "USD",
             rate = 1.0,
-            isFavorite = true
+            favoriteId = 1,
         ),
-        RatesItem(
+        RatesUiModel(
             symbol = "EUR",
             rate = 0.85,
-            isFavorite = false
+            favoriteId = null,
         ),
-        RatesItem(
+        RatesUiModel(
             symbol = "GBP",
             rate = 0.73,
-            isFavorite = true
+            favoriteId = 2,
         )
     )
 
