@@ -5,4 +5,8 @@
     <string name="sort_code_za">Code Z–A</string>
     <string name="sort_quote_asc">Quote Asc.</string>
     <string name="sort_quote_desc">Quote Desc.</string>
+    <string name="filters_title">Filters</string>
+    <string name="back">Back</string>
+    <string name="apply">Apply</string>
+    <string name="currencies_title">Currencies</string>
 </resources>
