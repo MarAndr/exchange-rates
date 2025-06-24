@@ -1,4 +1,4 @@
-package com.example.exchangerates.ui.main
+package com.example.exchangerates.ui.home
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,14 +17,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.exchangerates.R
 import com.example.exchangerates.ui.common.theme.AppTheme
-import com.example.exchangerates.ui.main.favorites.FavoritesScreen
-import com.example.exchangerates.ui.main.rates.RatesScreen
-import com.example.exchangerates.ui.main.state.HomeScreenEvent
-import com.example.exchangerates.ui.main.state.HomeScreenState
-import com.example.exchangerates.ui.main.state.HomeTab
-import com.example.exchangerates.ui.main.state.HomeTab.Favorites
-import com.example.exchangerates.ui.main.state.HomeTab.Rates
-import com.example.exchangerates.ui.main.state.HomeViewModel
+import com.example.exchangerates.ui.home.favorites.FavoritesScreen
+import com.example.exchangerates.ui.home.rates.RatesScreen
+import com.example.exchangerates.ui.home.state.HomeScreenEvent
+import com.example.exchangerates.ui.home.state.HomeScreenState
+import com.example.exchangerates.ui.home.state.HomeTab
+import com.example.exchangerates.ui.home.state.HomeTab.Favorites
+import com.example.exchangerates.ui.home.state.HomeTab.Rates
+import com.example.exchangerates.ui.home.state.HomeViewModel
 
 @Composable
 fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {

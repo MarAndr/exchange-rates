@@ -1,4 +1,4 @@
-package com.example.exchangerates.ui.main.rates
+package com.example.exchangerates.ui.home.rates
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,22 +25,20 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.exchangerates.ui.common.theme.AppTheme
-import com.example.exchangerates.ui.main.rates.preview.RatesScreenPreviewParamsProvider
-import com.example.exchangerates.ui.main.rates.state.RatesScreenEvent
-import com.example.exchangerates.ui.main.rates.state.RatesScreenState
-import com.example.exchangerates.ui.main.rates.state.RatesViewModel
+import com.example.exchangerates.ui.home.rates.preview.RatesScreenPreviewParamsProvider
+import com.example.exchangerates.ui.home.rates.state.RatesScreenEvent
+import com.example.exchangerates.ui.home.rates.state.RatesScreenState
+import com.example.exchangerates.ui.home.rates.state.RatesViewModel
 
 @Composable
 fun RatesScreen(
     viewModel: RatesViewModel = hiltViewModel(),
-    onFilterClick: () -> Unit = {},
 ) {
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
 
     RatesScreen(
         screenState = screenState,
         onEvent = viewModel::onEvent,
-        onFilterClick = onFilterClick,
     )
 }
 
@@ -49,7 +47,6 @@ fun RatesScreen(
 private fun RatesScreen(
     screenState: RatesScreenState,
     onEvent: (RatesScreenEvent) -> Unit,
-    onFilterClick: () -> Unit,
 ) {
 
     Scaffold(
@@ -91,7 +88,9 @@ private fun RatesScreen(
                         baseCurrency = screenState.baseCurrency,
                         availableCurrencies = screenState.availableCurrencies,
                         onBaseCurrencyChanged = { onEvent(RatesScreenEvent.OnBaseCurrencyChanged(it)) },
-                        onFilterClick = onFilterClick,
+                        onFilterClick = {
+                            onEvent(RatesScreenEvent.OpenFilters)
+                        },
                     )
 
                     Spacer(Modifier.height(12.dp))
@@ -130,7 +129,7 @@ private fun RatesScreen(
 }
 
 @Composable
-@Preview(name = "Success State", showBackground = true, apiLevel = 34)
+@Preview(showBackground = true, apiLevel = 34)
 private fun RatesScreenSuccessPreview(
     @PreviewParameter(RatesScreenPreviewParamsProvider::class)
     state: RatesScreenState,
@@ -138,6 +137,5 @@ private fun RatesScreenSuccessPreview(
     RatesScreen(
         screenState = state,
         onEvent = {},
-        onFilterClick = {},
     )
 }

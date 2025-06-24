@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.example.exchangerates.ui.main.rates
+package com.example.exchangerates.ui.home.rates
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border

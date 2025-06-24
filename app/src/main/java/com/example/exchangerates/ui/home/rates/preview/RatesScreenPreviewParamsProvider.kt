@@ -1,8 +1,8 @@
-package com.example.exchangerates.ui.main.rates.preview
+package com.example.exchangerates.ui.home.rates.preview
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import com.example.exchangerates.ui.main.rates.state.RatesScreenState
-import com.example.exchangerates.ui.main.rates.state.RatesUiModel
+import com.example.exchangerates.ui.home.rates.state.RatesScreenState
+import com.example.exchangerates.ui.home.rates.state.RatesUiModel
 
 internal class RatesScreenPreviewParamsProvider : PreviewParameterProvider<RatesScreenState> {
     private val mockRates = listOf(

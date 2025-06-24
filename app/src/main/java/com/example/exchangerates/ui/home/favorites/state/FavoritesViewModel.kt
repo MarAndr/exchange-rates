@@ -1,4 +1,4 @@
-package com.example.exchangerates.ui.main.favorites.state
+package com.example.exchangerates.ui.home.favorites.state
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

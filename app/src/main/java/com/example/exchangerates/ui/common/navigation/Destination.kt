@@ -7,8 +7,5 @@ sealed interface Destination {
     data object Home : Destination
 
     @Serializable
-    data object Favorites : Destination
-
-    @Serializable
     data object Filters : Destination
 }

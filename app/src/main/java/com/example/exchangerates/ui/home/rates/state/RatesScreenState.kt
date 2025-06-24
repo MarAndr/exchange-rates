@@ -1,6 +1,5 @@
-package com.example.exchangerates.ui.main.rates.state
+package com.example.exchangerates.ui.home.rates.state
 
-import com.example.exchangerates.features.rates.api.model.RatesItem
 import com.example.exchangerates.features.rates.api.model.Currency
 
 

@@ -1,4 +1,4 @@
-package com.example.exchangerates.ui.main.state
+package com.example.exchangerates.ui.home.state
 
 data class HomeScreenState(
     val selectedTab: HomeTab,

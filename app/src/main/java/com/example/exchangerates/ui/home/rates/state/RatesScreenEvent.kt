@@ -1,4 +1,4 @@
-package com.example.exchangerates.ui.main.rates.state
+package com.example.exchangerates.ui.home.rates.state
 
 sealed interface RatesScreenEvent {
     data class OnFavoriteClick(
@@ -8,5 +8,8 @@ sealed interface RatesScreenEvent {
     ) : RatesScreenEvent
 
     data object OnRefresh : RatesScreenEvent
+
     data class OnBaseCurrencyChanged(val newBaseCurrency: String) : RatesScreenEvent
+
+    data object OpenFilters : RatesScreenEvent
 }

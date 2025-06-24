@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalCoroutinesApi::class)
 
-package com.example.exchangerates.ui.main.rates.state
+package com.example.exchangerates.ui.home.rates.state
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,6 +8,8 @@ import com.example.exchangerates.features.common.loading.LoadingState
 import com.example.exchangerates.features.favorites.api.FavoritePairsRepository
 import com.example.exchangerates.features.favorites.api.model.FavoritePair
 import com.example.exchangerates.features.rates.api.RatesRepository
+import com.example.exchangerates.ui.common.navigation.AppNavigator
+import com.example.exchangerates.ui.common.navigation.Destination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -25,6 +27,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RatesViewModel @Inject constructor(
+    private val appNavigator: AppNavigator,
     private val repository: RatesRepository,
     private val favoriteRepository: FavoritePairsRepository,
 ) : ViewModel() {
@@ -107,6 +110,10 @@ class RatesViewModel @Inject constructor(
 
             is RatesScreenEvent.OnBaseCurrencyChanged -> {
                 baseCurrency.value = event.newBaseCurrency
+            }
+
+            RatesScreenEvent.OpenFilters -> {
+                appNavigator.navigateTo(Destination.Filters)
             }
         }
     }
