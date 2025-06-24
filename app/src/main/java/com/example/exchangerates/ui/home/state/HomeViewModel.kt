@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor() : ViewModel() {
-    private val selectedTab = MutableStateFlow(HomeTab.Rates)
+    private val selectedTab = MutableStateFlow(HomeTab.Currencies)
 
     val screenState = selectedTab
         .map { selectedTab ->
@@ -22,7 +22,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.Lazily,
-            initialValue = HomeScreenState(HomeTab.Rates)
+            initialValue = HomeScreenState(HomeTab.Currencies)
         )
 
     fun onEvent(event: HomeScreenEvent) {

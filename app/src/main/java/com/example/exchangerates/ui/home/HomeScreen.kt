@@ -4,9 +4,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -23,7 +26,7 @@ import com.example.exchangerates.ui.home.state.HomeScreenEvent
 import com.example.exchangerates.ui.home.state.HomeScreenState
 import com.example.exchangerates.ui.home.state.HomeTab
 import com.example.exchangerates.ui.home.state.HomeTab.Favorites
-import com.example.exchangerates.ui.home.state.HomeTab.Rates
+import com.example.exchangerates.ui.home.state.HomeTab.Currencies
 import com.example.exchangerates.ui.home.state.HomeViewModel
 
 @Composable
@@ -60,11 +63,11 @@ private fun HomeScreen(
         ) { page ->
             val tab = HomeTab.entries[page]
             when (tab) {
-                Rates -> RatesScreen()
+                Currencies -> RatesScreen() //todo переименовать экран в CurrenciesScreen?
                 Favorites -> FavoritesScreen()
             }
         }
-
+        HorizontalDivider(color = AppTheme.color.mainColors.outline)
         NavigationBar(
             containerColor = AppTheme.color.bg.default,
         ) {
@@ -72,11 +75,23 @@ private fun HomeScreen(
             HomeTab.entries.forEach { tab ->
                 NavigationBarItem(
                     selected = selectedTab == tab,
+                    colors = NavigationBarItemColors(
+                        selectedIconColor = AppTheme.color.mainColors.primary,
+                        selectedTextColor = AppTheme.color.mainColors.textDefault,
+                        selectedIndicatorColor = AppTheme.color.mainColors.lightPrimary,
+                        unselectedIconColor = AppTheme.color.mainColors.secondary,
+                        unselectedTextColor = AppTheme.color.mainColors.secondary,
+                        disabledIconColor = AppTheme.color.mainColors.secondary,
+                        disabledTextColor = AppTheme.color.mainColors.secondary
+                    ),
                     icon = {
                         Icon(
                             painter = painterResource(tab.toIconRes()),
                             contentDescription = null,
                         )
+                    },
+                    label = {
+                        Text(tab.name)
                     },
                     onClick = {
                         onEvent(HomeScreenEvent.TabSelected(tab))
@@ -88,7 +103,7 @@ private fun HomeScreen(
 }
 
 private fun HomeTab.toIconRes() = when (this) {
-    Rates -> R.drawable.ic_currencies_menu
+    Currencies -> R.drawable.ic_currencies_menu
     Favorites -> R.drawable.ic_favorite_menu
 }
 
@@ -96,7 +111,7 @@ private fun HomeTab.toIconRes() = when (this) {
 @PreviewLightDark
 private fun PreviewHomeScreen() = AppTheme {
     HomeScreen(
-        screenState = HomeScreenState(Rates),
+        screenState = HomeScreenState(Currencies),
         onEvent = {},
     )
 }
