@@ -1,4 +1,4 @@
-package com.example.exchangerates.ui.rates.state
+package com.example.exchangerates.ui.main.rates.state
 
 sealed interface RatesScreenEvent {
     data class OnFavoriteClick(

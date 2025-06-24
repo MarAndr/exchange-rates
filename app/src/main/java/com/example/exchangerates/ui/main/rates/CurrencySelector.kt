@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.example.exchangerates.ui.rates
+package com.example.exchangerates.ui.main.rates
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
@@ -160,8 +160,8 @@ fun CurrencySelectorPreview() {
         CurrencySelector(
             baseCurrency = "USD",
             availableCurrencies = listOf(
-                com.example.exchangerates.features.rates.api.model.Currency("US Dollar", "USD"),
-                com.example.exchangerates.features.rates.api.model.Currency("Euro", "EUR")
+                Currency("US Dollar", "USD"),
+                Currency("Euro", "EUR")
             ),
             onBaseCurrencyChanged = {},
             onFilterClick = {}

@@ -1,4 +1,4 @@
-package com.example.exchangerates.ui.rates
+package com.example.exchangerates.ui.main.rates
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

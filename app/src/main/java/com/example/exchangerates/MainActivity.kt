@@ -4,17 +4,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.exchangerates.ui.common.navigation.Destination
 import com.example.exchangerates.ui.common.theme.AppTheme
 import com.example.exchangerates.ui.filters.FiltersScreen
-import com.example.exchangerates.ui.rates.RatesScreen
+import com.example.exchangerates.ui.main.HomeScreen
+import com.example.exchangerates.ui.main.rates.RatesScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,18 +26,15 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = Destination.Main,
+                    startDestination = Destination.Home,
                 ) {
-                    composable<Destination.Main> {
-                        RatesScreen(
-                            onFilterClick = {
-                                navController.navigate(Destination.Filters)
-                            }
-                        )
+                    composable<Destination.Home> {
+                        HomeScreen()
                     }
-                    
+
                     composable<Destination.Filters> {
                         FiltersScreen(
+                            // todo navigator
                             onBackClick = {
                                 navController.popBackStack()
                             },

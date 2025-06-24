@@ -4,7 +4,10 @@ import kotlinx.serialization.Serializable
 
 sealed interface Destination {
     @Serializable
-    data object Main : Destination
+    data object Home : Destination
+
+    @Serializable
+    data object Favorites : Destination
 
     @Serializable
     data object Filters : Destination

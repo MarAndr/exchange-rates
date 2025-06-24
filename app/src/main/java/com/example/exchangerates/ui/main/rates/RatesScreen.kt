@@ -1,4 +1,4 @@
-package com.example.exchangerates.ui.rates
+package com.example.exchangerates.ui.main.rates
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,10 +25,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.exchangerates.ui.common.theme.AppTheme
-import com.example.exchangerates.ui.rates.preview.RatesScreenPreviewParamsProvider
-import com.example.exchangerates.ui.rates.state.RatesScreenEvent
-import com.example.exchangerates.ui.rates.state.RatesScreenState
-import com.example.exchangerates.ui.rates.state.RatesViewModel
+import com.example.exchangerates.ui.main.rates.preview.RatesScreenPreviewParamsProvider
+import com.example.exchangerates.ui.main.rates.state.RatesScreenEvent
+import com.example.exchangerates.ui.main.rates.state.RatesScreenState
+import com.example.exchangerates.ui.main.rates.state.RatesViewModel
 
 @Composable
 fun RatesScreen(

@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalCoroutinesApi::class)
 
-package com.example.exchangerates.ui.rates.state
+package com.example.exchangerates.ui.main.rates.state
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -77,7 +77,7 @@ class RatesViewModel @Inject constructor(
         }
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
+        started = SharingStarted.Lazily,
         initialValue = RatesScreenState.Loading
     )
 
