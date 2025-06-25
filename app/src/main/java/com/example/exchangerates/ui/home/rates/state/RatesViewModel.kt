@@ -64,13 +64,13 @@ class RatesViewModel @Inject constructor(
                     is LoadingState.Success -> RatesScreenState.Success(
                         baseCurrency = baseCurrency.orEmpty(),
                         rates = ratesState.data.map { rate ->
-                            val favoriteId = favoritePairs
-                                .find { it.baseCurrency == baseCurrency && it.targetCurrency == rate.symbol }
-                                ?.id
+                            val isFavorite = favoritePairs
+                                .find { it.baseCurrency == baseCurrency && it.targetCurrency == rate.symbol } != null
                             RatesUiModel(
+                                base = baseCurrency.orEmpty(),
                                 symbol = rate.symbol,
                                 rate = rate.rate,
-                                favoriteId = favoriteId,
+                                isFavorite = isFavorite,
                             )
                         },
                         availableCurrencies = currenciesState.data,
@@ -88,16 +88,14 @@ class RatesViewModel @Inject constructor(
         when (event) {
             // todo provide dispatchers.io from DI
             is RatesScreenEvent.OnFavoriteClick -> viewModelScope.launch(Dispatchers.IO) {
-                if (event.rate.favoriteId != null) {
-                    val pair = FavoritePair(
-                        id = event.rate.favoriteId,
-                        baseCurrency = event.baseCurrency,
-                        targetCurrency = event.rate.symbol,
+                if (event.rate.isFavorite) {
+                    favoriteRepository.removePair(
+                        baseCurrency = event.rate.base,
+                        targetCurrency = event.rate.symbol
                     )
-                    favoriteRepository.removePair(pair)
                 } else {
                     val pair = FavoritePair(
-                        baseCurrency = event.baseCurrency,
+                        baseCurrency = event.rate.base,
                         targetCurrency = event.rate.symbol,
                     )
                     favoriteRepository.addPair(pair)

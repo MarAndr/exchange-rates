@@ -12,5 +12,9 @@ class FavoritePairsRepositoryImpl @Inject constructor(
 
     override suspend fun addPair(pair: FavoritePair) = favoriteDataSource.addFavoritePair(pair)
 
-    override suspend fun removePair(pair: FavoritePair) = favoriteDataSource.removeFavoritePair(pair)
+    override suspend fun removePair(baseCurrency: String, targetCurrency: String) =
+        favoriteDataSource.removeFavoritePair(
+            baseCurrency = baseCurrency,
+            targetCurrency = targetCurrency,
+        )
 }

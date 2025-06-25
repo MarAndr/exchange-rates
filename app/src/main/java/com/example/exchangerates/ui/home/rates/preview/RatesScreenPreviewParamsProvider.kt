@@ -7,19 +7,22 @@ import com.example.exchangerates.ui.home.rates.state.RatesUiModel
 internal class RatesScreenPreviewParamsProvider : PreviewParameterProvider<RatesScreenState> {
     private val mockRates = listOf(
         RatesUiModel(
+            base = "EUR",
             symbol = "USD",
             rate = 1.0,
-            favoriteId = 1,
+            isFavorite = false,
         ),
         RatesUiModel(
+            base = "EUR",
             symbol = "EUR",
             rate = 0.85,
-            favoriteId = null,
+            isFavorite = true,
         ),
         RatesUiModel(
+            base = "EUR",
             symbol = "GBP",
             rate = 0.73,
-            favoriteId = 2,
+            isFavorite = false,
         )
     )
 

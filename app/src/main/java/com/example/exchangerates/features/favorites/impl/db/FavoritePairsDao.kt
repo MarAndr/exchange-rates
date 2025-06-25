@@ -17,6 +17,6 @@ interface FavoritePairsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addPair(pair: FavoritePairEntity)
 
-    @Delete
-    fun removePair(pair: FavoritePairEntity)
+    @Query("DELETE FROM FAVORITEPAIRENTITY WHERE baseCurrency=:base AND targetCurrency=:target")
+    fun removePair(base: String, target: String)
 }

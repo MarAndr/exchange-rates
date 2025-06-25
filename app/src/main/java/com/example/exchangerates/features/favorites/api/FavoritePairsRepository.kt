@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface FavoritePairsRepository {
     fun getPairs(): Flow<List<FavoritePair>>
     suspend fun addPair(pair: FavoritePair)
-    suspend fun removePair(pair: FavoritePair)
+    suspend fun removePair(baseCurrency: String, targetCurrency: String)
 }

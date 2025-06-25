@@ -29,12 +29,7 @@ class FavoriteDataSourceImpl @Inject constructor(
         favoritePairsDao.addPair(entity)
     }
 
-    override suspend fun removeFavoritePair(pair: FavoritePair) {
-        val entity = FavoritePairEntity(
-            id = pair.id,
-            baseCurrency = pair.baseCurrency,
-            targetCurrency = pair.targetCurrency,
-        )
-        favoritePairsDao.removePair(entity)
+    override suspend fun removeFavoritePair(baseCurrency: String, targetCurrency: String) {
+        favoritePairsDao.removePair(base = baseCurrency, target = targetCurrency)
     }
 }

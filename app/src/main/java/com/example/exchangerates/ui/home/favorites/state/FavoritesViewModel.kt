@@ -7,11 +7,13 @@ import com.example.exchangerates.features.favorites.api.FavoritePairsRepository
 import com.example.exchangerates.features.rates.api.RatesRepository
 import com.example.exchangerates.features.rates.api.model.RatesItem
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -36,9 +38,7 @@ class FavoritesViewModel @Inject constructor(
                     errors.size == loadingStates.size -> FavoritesScreenState.Error
                     loadings.size == loadingStates.size -> FavoritesScreenState.Loading
                     else -> {
-                        println("favorites | $successes")
                         val rates: List<RatesItem> = successes.fold(emptyList()) { list, success ->
-                            println("favorites fold | $list + ${success.data}")
                             list + success.data
                         }
                         FavoritesScreenState.Data(rates)
@@ -54,8 +54,12 @@ class FavoritesViewModel @Inject constructor(
 
     fun onEvent(event: FavoritesScreenEvent) {
         when (event) {
-            is FavoritesScreenEvent.RemoveFromFavorites -> {
-
+            // todo dispatchers
+            is FavoritesScreenEvent.RemoveFromFavorites -> viewModelScope.launch(Dispatchers.IO) {
+                favoriteRepository.removePair(
+                    baseCurrency = event.ratesItem.base,
+                    targetCurrency = event.ratesItem.symbol,
+                )
             }
         }
     }
