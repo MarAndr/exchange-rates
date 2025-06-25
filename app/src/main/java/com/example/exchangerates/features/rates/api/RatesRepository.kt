@@ -6,6 +6,6 @@ import com.example.exchangerates.features.rates.api.model.RatesItem
 import kotlinx.coroutines.flow.Flow
 
 interface RatesRepository {
-    fun getLatestRates(baseCurrency: String): Flow<LoadingState<List<RatesItem>>>
+    fun getLatestRates(baseCurrency: String, targetCurrencies: List<String> = emptyList()): Flow<LoadingState<List<RatesItem>>>
     fun getCurrencyList(): Flow<LoadingState<List<Currency>>>
 }

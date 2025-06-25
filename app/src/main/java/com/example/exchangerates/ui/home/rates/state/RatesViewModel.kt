@@ -28,7 +28,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RatesViewModel @Inject constructor(
     private val appNavigator: AppNavigator,
-    private val repository: RatesRepository,
+    private val ratesRepository: RatesRepository,
     private val favoriteRepository: FavoritePairsRepository,
 ) : ViewModel() {
 
@@ -37,11 +37,11 @@ class RatesViewModel @Inject constructor(
     private val ratesFlow = baseCurrency
         .filterNotNull()
         .flatMapLatest { baseCurrency ->
-            repository.getLatestRates(baseCurrency)
+            ratesRepository.getLatestRates(baseCurrency)
         }
         .onStart { emit(LoadingState.Loading) }
 
-    private val currenciesFlow = repository.getCurrencyList()
+    private val currenciesFlow = ratesRepository.getCurrencyList()
         .onEach { state ->
             if (state is LoadingState.Success) {
                 baseCurrency.value = state.data.firstOrNull()?.symbol

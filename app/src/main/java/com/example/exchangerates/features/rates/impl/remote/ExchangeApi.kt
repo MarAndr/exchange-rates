@@ -13,7 +13,7 @@ interface ExchangeApi {
     @Headers("apikey: ${Constants.API_KEY}") // todo: interceptor
     suspend fun getLatestCurrency(
         @Query("base") base: String,
-        @Query("symbols") symbols: String?,
+        @Query("symbols") symbolsList: String,
     ): RateDto
 
     @GET("exchangerates_data/symbols")

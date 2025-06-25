@@ -107,17 +107,19 @@ private fun RatesScreen(
                         items(
                             items = screenState.rates,
                             key = { it.symbol }
-                        ) { currency ->
-                            CurrencyCard(
-                                currencyCode = currency.symbol,
-                                rate = currency.rate,
-                                isFavorite = currency.isFavorite,
+                        ) { rates ->
+                            RatesCard(
+                                modifier = Modifier
+                                    .animateItem(),
+                                title = rates.symbol,
+                                rate = rates.rate,
+                                isFavorite = rates.isFavorite,
                                 onFavoriteClick = {
                                     onEvent(
                                         RatesScreenEvent.OnFavoriteClick(
                                             baseCurrency = screenState.baseCurrency,
-                                            rate = currency,
-                                            wasFavorite = currency.isFavorite,
+                                            rate = rates,
+                                            wasFavorite = rates.isFavorite,
                                         )
                                     )
                                 }

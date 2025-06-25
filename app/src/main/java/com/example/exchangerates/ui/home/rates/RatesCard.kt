@@ -30,8 +30,9 @@ import com.example.exchangerates.R
 import com.example.exchangerates.ui.common.theme.AppTheme
 
 @Composable
-fun CurrencyCard(
-    currencyCode: String,
+fun RatesCard(
+    modifier: Modifier = Modifier,
+    title: String,
     rate: Double,
     isFavorite: Boolean,
     onFavoriteClick: () -> Unit
@@ -39,7 +40,7 @@ fun CurrencyCard(
     val appColors = AppTheme.color
 
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(color = appColors.bg.card, shape = RoundedCornerShape(12.dp))
             .padding(horizontal = 16.dp, vertical = 12.dp),
@@ -47,7 +48,7 @@ fun CurrencyCard(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = currencyCode,
+            text = title,
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Medium,
             fontSize = 14.sp,
@@ -89,50 +90,11 @@ fun CurrencyCard(
 @Composable
 private fun CurrencyCardUsdFavoritePreview() {
     AppTheme {
-        CurrencyCard(
-            currencyCode = "USD",
+        RatesCard(
+            title = "USD",
             rate = 1.234567,
             isFavorite = true,
             onFavoriteClick = {}
         )
-    }
-}
-
-
-@Preview(name = "Multiple Currency Cards", showBackground = true, apiLevel = 34)
-@Composable
-private fun MultipleCurrencyCardsPreview() {
-    AppTheme {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            CurrencyCard(
-                currencyCode = "USD",
-                rate = 1.234567,
-                isFavorite = true,
-                onFavoriteClick = {}
-            )
-            CurrencyCard(
-                currencyCode = "EUR",
-                rate = 0.987654,
-                isFavorite = false,
-                onFavoriteClick = {}
-            )
-            CurrencyCard(
-                currencyCode = "GBP",
-                rate = 2.123456,
-                isFavorite = true,
-                onFavoriteClick = {}
-            )
-            CurrencyCard(
-                currencyCode = "JPY",
-                rate = 0.001234,
-                isFavorite = false,
-                onFavoriteClick = {}
-            )
-        }
     }
 }
