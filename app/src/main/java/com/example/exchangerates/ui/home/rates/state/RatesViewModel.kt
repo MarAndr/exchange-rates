@@ -10,6 +10,8 @@ import com.example.exchangerates.features.favorites.api.model.FavoritePair
 import com.example.exchangerates.features.rates.api.RatesRepository
 import com.example.exchangerates.ui.common.navigation.AppNavigator
 import com.example.exchangerates.ui.common.navigation.Destination
+import com.example.exchangerates.ui.common.state.RefreshLoadingState
+import com.example.exchangerates.ui.common.state.refreshable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -34,34 +36,38 @@ class RatesViewModel @Inject constructor(
 
     private val baseCurrency: MutableStateFlow<String?> = MutableStateFlow(null)
 
-    private val ratesFlow = baseCurrency
-        .filterNotNull()
-        .flatMapLatest { baseCurrency ->
-            ratesRepository.getLatestRates(baseCurrency)
-        }
-        .onStart { emit(LoadingState.Loading) }
-
-    private val currenciesFlow = ratesRepository.getCurrencyList()
-        .onEach { state ->
-            if (state is LoadingState.Success) {
-                baseCurrency.value = state.data.firstOrNull()?.symbol
+    private val ratesRefreshable = refreshable {
+        baseCurrency
+            .filterNotNull()
+            .flatMapLatest { baseCurrency ->
+                ratesRepository.getLatestRates(baseCurrency)
             }
-        }
+            .onStart { emit(LoadingState.Loading) }
+    }
+
+    private val currenciesRefreshable = refreshable {
+        ratesRepository.getCurrencyList()
+            .onEach { state ->
+                if (state is LoadingState.Success) {
+                    baseCurrency.value = state.data.firstOrNull()?.symbol
+                }
+            }
+    }
 
     val screenState: StateFlow<RatesScreenState> = combine(
         baseCurrency,
-        ratesFlow,
-        currenciesFlow,
+        ratesRefreshable.flow,
+        currenciesRefreshable.flow,
         favoriteRepository.getPairs(),
     ) { baseCurrency, ratesState, currenciesState, favoritePairs ->
         when (currenciesState) {
-            LoadingState.Loading -> RatesScreenState.Loading
-            LoadingState.Error -> RatesScreenState.Error
-            is LoadingState.Success -> {
+            RefreshLoadingState.Initial.Loading -> RatesScreenState.Loading
+            RefreshLoadingState.Initial.Error -> RatesScreenState.Error
+            is RefreshLoadingState.Data -> {
                 when (ratesState) {
-                    LoadingState.Loading -> RatesScreenState.Loading
-                    LoadingState.Error -> RatesScreenState.Error
-                    is LoadingState.Success -> RatesScreenState.Success(
+                    RefreshLoadingState.Initial.Loading -> RatesScreenState.Loading
+                    RefreshLoadingState.Initial.Error -> RatesScreenState.Error
+                    is RefreshLoadingState.Data -> RatesScreenState.Success(
                         baseCurrency = baseCurrency.orEmpty(),
                         rates = ratesState.data.map { rate ->
                             val isFavorite = favoritePairs
@@ -74,6 +80,7 @@ class RatesViewModel @Inject constructor(
                             )
                         },
                         availableCurrencies = currenciesState.data,
+                        isRefreshing = ratesState.isLoading || currenciesState.isLoading,
                     )
                 }
             }
@@ -103,7 +110,8 @@ class RatesViewModel @Inject constructor(
             }
 
             is RatesScreenEvent.OnRefresh -> {
-                // todo
+                currenciesRefreshable.refresh()
+                ratesRefreshable.refresh()
             }
 
             is RatesScreenEvent.OnBaseCurrencyChanged -> {
