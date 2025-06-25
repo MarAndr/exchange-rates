@@ -1,6 +1,9 @@
 package com.example.exchangerates.ui.filters
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -20,6 +23,7 @@ import com.example.exchangerates.R
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.exchangerates.ui.common.theme.AppTheme
 
@@ -58,23 +62,31 @@ fun FiltersScreen(
         },
         containerColor = AppTheme.color.bg.default,
     ) { paddingValues ->
-        Column(Modifier.padding(paddingValues)) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
             SortOptions(
                 selectedOption = SortOption.CodeAZ,
                 onOptionSelected = onOptionsSelected,
             )
             Button(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
                 colors = ButtonColors(
                     containerColor = AppTheme.color.mainColors.primary,
                     contentColor = AppTheme.color.mainColors.onPrimary,
                     disabledContainerColor = AppTheme.color.mainColors.textDefault,
                     disabledContentColor = AppTheme.color.mainColors.secondary
-                ), onClick = {}) {
+                ), 
+                onClick = {}
+            ) {
                 Text(stringResource(R.string.apply))
             }
         }
-
     }
 }
 
