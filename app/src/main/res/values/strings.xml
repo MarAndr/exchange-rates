@@ -9,4 +9,6 @@
     <string name="back">Back</string>
     <string name="apply">Apply</string>
     <string name="currencies_title">Currencies</string>
+    <string name="error_occurred_try_again">An error occurred. Please try again</string>
+    <string name="refresh">Refresh</string>
 </resources>
