@@ -32,7 +32,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            var selectedSortOption by remember { mutableStateOf<SortOption?>(SortOption.CodeAZ) }
+            var selectedSortOption by remember { mutableStateOf(SortOption.CodeAZ) }
+
             AppTheme {
                 val navController = rememberNavController()
 
@@ -50,17 +51,15 @@ class MainActivity : ComponentActivity() {
                     startDestination = Destination.Home,
                 ) {
                     composable<Destination.Home> {
-                        HomeScreen(selectedSortOption = selectedSortOption!!)
+                        HomeScreen(selectedSortOption = selectedSortOption)
                     }
 
                     composable<Destination.Filters> {
                         FiltersScreen(
                             // todo navigator
+                            currentSortOption = selectedSortOption,
                             onBackClick = {
                                 navController.popBackStack()
-                            },
-                            onOptionsSelected = {
-                                selectedSortOption = it
                             },
                             onApplyClick = { selectedOption ->
                                 selectedSortOption = selectedOption

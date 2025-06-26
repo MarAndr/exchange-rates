@@ -34,12 +34,12 @@ import com.example.exchangerates.ui.common.theme.AppTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FiltersScreen(
+    currentSortOption: SortOption,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
-    onOptionsSelected: (SortOption) -> Unit,
     onApplyClick: (SortOption) -> Unit,
 ) {
-    var selectedOption by remember { mutableStateOf(SortOption.CodeAZ) }
+    var selectedOption by remember { mutableStateOf(currentSortOption) }
 
     Scaffold(
         topBar = {
@@ -79,7 +79,6 @@ fun FiltersScreen(
                 selectedOption = selectedOption,
                 onOptionSelected = { option ->
                     selectedOption = option
-                    onOptionsSelected(option)
                 },
             )
             Button(
@@ -106,8 +105,8 @@ fun FiltersScreen(
 @Preview(showBackground = true, apiLevel = 34)
 private fun FiltersScreenPreview() = AppTheme {
     FiltersScreen(
+        currentSortOption = SortOption.CodeAZ,
         onBackClick = {},
-        onOptionsSelected = {},
         onApplyClick = {},
     )
 } 
