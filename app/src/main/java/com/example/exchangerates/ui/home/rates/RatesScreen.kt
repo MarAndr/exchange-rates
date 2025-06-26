@@ -108,7 +108,7 @@ private fun RatesScreen(
                 }
 
                 is RatesScreenState.Success -> {
-                    Spacer(Modifier.height(8.dp))
+                    Spacer(Modifier.height(16.dp))
                     CurrencySelector(
                         baseCurrency = screenState.baseCurrency,
                         availableCurrencies = screenState.availableCurrencies,
