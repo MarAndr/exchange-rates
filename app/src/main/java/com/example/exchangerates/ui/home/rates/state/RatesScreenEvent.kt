@@ -1,5 +1,7 @@
 package com.example.exchangerates.ui.home.rates.state
 
+import com.example.exchangerates.ui.filters.SortOption
+
 sealed interface RatesScreenEvent {
     data class OnFavoriteClick(
         val rate: RatesUiModel,
@@ -11,4 +13,6 @@ sealed interface RatesScreenEvent {
     data class OnBaseCurrencyChanged(val newBaseCurrency: String) : RatesScreenEvent
 
     data object OpenFilters : RatesScreenEvent
+
+    data class OnSortOptionChanged(val sortOption: SortOption) : RatesScreenEvent
 }

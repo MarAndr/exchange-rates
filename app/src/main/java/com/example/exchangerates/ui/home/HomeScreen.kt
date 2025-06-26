@@ -66,7 +66,7 @@ private fun HomeScreen(
         ) { page ->
             val tab = HomeTab.entries[page]
             when (tab) {
-                Currencies -> RatesScreen() //todo переименовать экран в CurrenciesScreen?
+                Currencies -> RatesScreen(selectedSortOption = selectedSortOption) //todo переименовать экран в CurrenciesScreen?
                 Favorites -> FavoritesScreen()
             }
         }

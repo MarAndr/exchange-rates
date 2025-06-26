@@ -12,6 +12,7 @@ import com.example.exchangerates.ui.common.navigation.AppNavigator
 import com.example.exchangerates.ui.common.navigation.Destination
 import com.example.exchangerates.ui.common.state.RefreshLoadingState
 import com.example.exchangerates.ui.common.state.refreshable
+import com.example.exchangerates.ui.filters.SortOption
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -35,6 +36,7 @@ class RatesViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val baseCurrency: MutableStateFlow<String?> = MutableStateFlow(null)
+    private val sortOption: MutableStateFlow<SortOption> = MutableStateFlow(SortOption.CodeAZ)
 
     private val ratesRefreshable = refreshable {
         baseCurrency
@@ -59,7 +61,8 @@ class RatesViewModel @Inject constructor(
         ratesRefreshable.flow,
         currenciesRefreshable.flow,
         favoriteRepository.getPairs(),
-    ) { baseCurrency, ratesState, currenciesState, favoritePairs ->
+        sortOption,
+    ) { baseCurrency, ratesState, currenciesState, favoritePairs, currentSortOption ->
         when (currenciesState) {
             RefreshLoadingState.Initial.Loading -> RatesScreenState.Loading
             RefreshLoadingState.Initial.Error -> RatesScreenState.Error
@@ -67,9 +70,8 @@ class RatesViewModel @Inject constructor(
                 when (ratesState) {
                     RefreshLoadingState.Initial.Loading -> RatesScreenState.Loading
                     RefreshLoadingState.Initial.Error -> RatesScreenState.Error
-                    is RefreshLoadingState.Data -> RatesScreenState.Success(
-                        baseCurrency = baseCurrency.orEmpty(),
-                        rates = ratesState.data.map { rate ->
+                    is RefreshLoadingState.Data -> {
+                        val rates = ratesState.data.map { rate ->
                             val isFavorite = favoritePairs
                                 .find { it.baseCurrency == baseCurrency && it.targetCurrency == rate.symbol } != null
                             RatesUiModel(
@@ -78,10 +80,22 @@ class RatesViewModel @Inject constructor(
                                 rate = rate.rate,
                                 isFavorite = isFavorite,
                             )
-                        },
-                        availableCurrencies = currenciesState.data,
-                        isRefreshing = ratesState.isLoading || currenciesState.isLoading,
-                    )
+                        }.let { ratesList ->
+                            when (currentSortOption) {
+                                SortOption.CodeAZ -> ratesList.sortedBy { it.symbol }
+                                SortOption.CodeZA -> ratesList.sortedByDescending { it.symbol }
+                                SortOption.QuoteAsc -> ratesList.sortedBy { it.rate }
+                                SortOption.QuoteDesc -> ratesList.sortedByDescending { it.rate }
+                            }
+                        }
+                        
+                        RatesScreenState.Success(
+                            baseCurrency = baseCurrency.orEmpty(),
+                            rates = rates,
+                            availableCurrencies = currenciesState.data,
+                            isRefreshing = ratesState.isLoading || currenciesState.isLoading,
+                        )
+                    }
                 }
             }
         }
@@ -120,6 +134,10 @@ class RatesViewModel @Inject constructor(
 
             RatesScreenEvent.OpenFilters -> {
                 appNavigator.navigateTo(Destination.Filters)
+            }
+
+            is RatesScreenEvent.OnSortOptionChanged -> {
+                sortOption.value = event.sortOption
             }
         }
     }

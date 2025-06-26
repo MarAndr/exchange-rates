@@ -18,6 +18,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.example.exchangerates.R
 import androidx.compose.ui.res.stringResource
@@ -33,7 +37,10 @@ fun FiltersScreen(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
     onOptionsSelected: (SortOption) -> Unit,
+    onApplyClick: (SortOption) -> Unit,
 ) {
+    var selectedOption by remember { mutableStateOf(SortOption.CodeAZ) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -69,8 +76,11 @@ fun FiltersScreen(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             SortOptions(
-                selectedOption = SortOption.CodeAZ,
-                onOptionSelected = onOptionsSelected,
+                selectedOption = selectedOption,
+                onOptionSelected = { option ->
+                    selectedOption = option
+                    onOptionsSelected(option)
+                },
             )
             Button(
                 modifier = Modifier
@@ -82,7 +92,9 @@ fun FiltersScreen(
                     disabledContainerColor = AppTheme.color.mainColors.textDefault,
                     disabledContentColor = AppTheme.color.mainColors.secondary
                 ), 
-                onClick = {}
+                onClick = {
+                    onApplyClick(selectedOption)
+                }
             ) {
                 Text(stringResource(R.string.apply))
             }
@@ -96,5 +108,6 @@ private fun FiltersScreenPreview() = AppTheme {
     FiltersScreen(
         onBackClick = {},
         onOptionsSelected = {},
+        onApplyClick = {},
     )
 } 

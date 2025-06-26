@@ -61,6 +61,10 @@ class MainActivity : ComponentActivity() {
                             },
                             onOptionsSelected = {
                                 selectedSortOption = it
+                            },
+                            onApplyClick = { selectedOption ->
+                                selectedSortOption = selectedOption
+                                navController.popBackStack()
                             }
                         )
                     }
