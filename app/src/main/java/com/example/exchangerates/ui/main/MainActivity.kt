@@ -5,12 +5,17 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.exchangerates.ui.common.navigation.Destination
 import com.example.exchangerates.ui.common.theme.AppTheme
 import com.example.exchangerates.ui.filters.FiltersScreen
+import com.example.exchangerates.ui.filters.SortOption
 import com.example.exchangerates.ui.home.HomeScreen
 import com.example.exchangerates.ui.main.navigation.NavigationEventsProvider
 import com.example.exchangerates.ui.main.navigation.model.NavigationEvent
@@ -27,6 +32,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
+            var selectedSortOption by remember { mutableStateOf<SortOption?>(SortOption.CodeAZ) }
             AppTheme {
                 val navController = rememberNavController()
 
@@ -44,7 +50,7 @@ class MainActivity : ComponentActivity() {
                     startDestination = Destination.Home,
                 ) {
                     composable<Destination.Home> {
-                        HomeScreen()
+                        HomeScreen(selectedSortOption = selectedSortOption!!)
                     }
 
                     composable<Destination.Filters> {
@@ -53,7 +59,9 @@ class MainActivity : ComponentActivity() {
                             onBackClick = {
                                 navController.popBackStack()
                             },
-                            onOptionsSelected = {} //todo
+                            onOptionsSelected = {
+                                selectedSortOption = it
+                            }
                         )
                     }
                 }
