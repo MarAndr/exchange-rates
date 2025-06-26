@@ -1,5 +1,5 @@
 package com.example.exchangerates.core.remote
 
 object Constants {
-    const val API_KEY = "L84JCatpD9MPVFV0wIKV8DIoBNdPzMop"
+    const val API_KEY = "rY1RL7qJWVXXznLX9F60sQge208L3NHp"
 }
