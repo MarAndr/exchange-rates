@@ -20,4 +20,8 @@ class AppNavigatorImpl @Inject constructor() : AppNavigator, NavigationEventsPro
     override fun back() {
         _channel.trySend(NavigationEvent.Back)
     }
+
+    override fun backWithResult(result: Any?) {
+        _channel.trySend(NavigationEvent.BackWithResult(result))
+    }
 }

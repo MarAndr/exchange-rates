@@ -1,7 +1,6 @@
 package com.example.exchangerates.ui.filters
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,9 +18,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.example.exchangerates.R
 import androidx.compose.ui.res.stringResource
@@ -29,18 +25,32 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.exchangerates.ui.common.theme.AppTheme
+import com.example.exchangerates.ui.filters.state.FiltersScreenEvent
+import com.example.exchangerates.ui.filters.state.FiltersScreenState
+import com.example.exchangerates.ui.filters.state.FiltersViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FiltersScreen(
-    currentSortOption: SortOption,
-    onBackClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    onApplyClick: (SortOption) -> Unit,
+    viewModel: FiltersViewModel = hiltViewModel(),
 ) {
-    var selectedOption by remember { mutableStateOf(currentSortOption) }
+    val screenState by viewModel.screenState.collectAsStateWithLifecycle()
 
+    FiltersScreen(
+        screenState = screenState,
+        onEvent = viewModel::onEvent,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FiltersScreen(
+    screenState: FiltersScreenState,
+    onEvent: (FiltersScreenEvent) -> Unit,
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -57,7 +67,9 @@ fun FiltersScreen(
                     titleContentColor = AppTheme.color.mainColors.textDefault,
                 ),
                 navigationIcon = {
-                    IconButton(onClick = onBackClick) {
+                    IconButton(
+                        onClick = { onEvent(FiltersScreenEvent.OnBackClicked) },
+                    ) {
                         Icon(
                             tint = AppTheme.color.mainColors.primary,
                             imageVector = Icons.Default.ArrowBack,
@@ -76,9 +88,9 @@ fun FiltersScreen(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             SortOptions(
-                selectedOption = selectedOption,
+                selectedOption = screenState.sortOption,
                 onOptionSelected = { option ->
-                    selectedOption = option
+                    onEvent(FiltersScreenEvent.SortOptionSelected(option))
                 },
             )
             Button(
@@ -90,9 +102,9 @@ fun FiltersScreen(
                     contentColor = AppTheme.color.mainColors.onPrimary,
                     disabledContainerColor = AppTheme.color.mainColors.textDefault,
                     disabledContentColor = AppTheme.color.mainColors.secondary
-                ), 
+                ),
                 onClick = {
-                    onApplyClick(selectedOption)
+                    onEvent(FiltersScreenEvent.OnApply(screenState.sortOption))
                 }
             ) {
                 Text(stringResource(R.string.apply))
@@ -105,8 +117,7 @@ fun FiltersScreen(
 @Preview(showBackground = true, apiLevel = 34)
 private fun FiltersScreenPreview() = AppTheme {
     FiltersScreen(
-        currentSortOption = SortOption.CodeAZ,
-        onBackClick = {},
-        onApplyClick = {},
+        screenState = FiltersScreenState(SortOption.QuoteAsc),
+        onEvent = {},
     )
 } 

@@ -133,7 +133,7 @@ class RatesViewModel @Inject constructor(
             }
 
             RatesScreenEvent.OpenFilters -> {
-                appNavigator.navigateTo(Destination.Filters)
+                appNavigator.navigateTo(Destination.Filters(sortOption.value))
             }
 
             is RatesScreenEvent.OnSortOptionChanged -> {

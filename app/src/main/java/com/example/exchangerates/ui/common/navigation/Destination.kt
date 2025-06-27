@@ -1,5 +1,6 @@
 package com.example.exchangerates.ui.common.navigation
 
+import com.example.exchangerates.ui.filters.SortOption
 import kotlinx.serialization.Serializable
 
 sealed interface Destination {
@@ -7,5 +8,7 @@ sealed interface Destination {
     data object Home : Destination
 
     @Serializable
-    data object Filters : Destination
+    data class Filters(
+        val selectedSorting: SortOption = SortOption.CodeAZ,
+    ) : Destination
 }

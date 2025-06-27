@@ -19,6 +19,8 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.exchangerates.R
+import com.example.exchangerates.ui.common.navigation.BackResultHandler
+import com.example.exchangerates.ui.common.navigation.PreviewBackResultHandler
 import com.example.exchangerates.ui.common.theme.AppTheme
 import com.example.exchangerates.ui.filters.SortOption
 import com.example.exchangerates.ui.home.favorites.FavoritesScreen
@@ -27,25 +29,28 @@ import com.example.exchangerates.ui.home.state.HomeScreenEvent
 import com.example.exchangerates.ui.home.state.HomeScreenState
 import com.example.exchangerates.ui.home.state.HomeTab
 import com.example.exchangerates.ui.home.state.HomeTab.Favorites
-import com.example.exchangerates.ui.home.state.HomeTab.Currencies
+import com.example.exchangerates.ui.home.state.HomeTab.Rates
 import com.example.exchangerates.ui.home.state.HomeViewModel
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), selectedSortOption: SortOption = SortOption.CodeAZ) {
+fun HomeScreen(
+    viewModel: HomeViewModel = hiltViewModel(),
+    resultHandler: BackResultHandler<SortOption>,
+) {
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
 
     HomeScreen(
         screenState = screenState,
+        resultHandler = resultHandler,
         onEvent = viewModel::onEvent,
-        selectedSortOption,
     )
 }
 
 @Composable
 private fun HomeScreen(
     screenState: HomeScreenState,
+    resultHandler: BackResultHandler<SortOption>,
     onEvent: (HomeScreenEvent) -> Unit,
-    selectedSortOption: SortOption,
 ) {
     val state = rememberPagerState { HomeTab.entries.size }
 
@@ -66,7 +71,7 @@ private fun HomeScreen(
         ) { page ->
             val tab = HomeTab.entries[page]
             when (tab) {
-                Currencies -> RatesScreen(selectedSortOption = selectedSortOption) //todo переименовать экран в CurrenciesScreen?
+                Rates -> RatesScreen(resultHandler = resultHandler)
                 Favorites -> FavoritesScreen()
             }
         }
@@ -106,7 +111,7 @@ private fun HomeScreen(
 }
 
 private fun HomeTab.toIconRes() = when (this) {
-    Currencies -> R.drawable.ic_currencies_menu
+    Rates -> R.drawable.ic_currencies_menu
     Favorites -> R.drawable.ic_favorite_menu
 }
 
@@ -114,8 +119,10 @@ private fun HomeTab.toIconRes() = when (this) {
 @PreviewLightDark
 private fun PreviewHomeScreen() = AppTheme {
     HomeScreen(
-        screenState = HomeScreenState(Currencies),
-        selectedSortOption = SortOption.QuoteAsc,
+        screenState = HomeScreenState(
+            Rates,
+        ),
+        resultHandler = PreviewBackResultHandler(),
         onEvent = {},
     )
 }

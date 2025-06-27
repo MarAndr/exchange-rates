@@ -5,6 +5,6 @@ data class HomeScreenState(
 )
 
 enum class HomeTab {
-    Currencies,
+    Rates,
     Favorites,
 }

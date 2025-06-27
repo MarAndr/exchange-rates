@@ -37,24 +37,30 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.exchangerates.R
+import com.example.exchangerates.ui.common.navigation.BackResultEffect
+import com.example.exchangerates.ui.common.navigation.BackResultHandler
 import com.example.exchangerates.ui.common.theme.AppTheme
 import com.example.exchangerates.ui.home.rates.preview.RatesScreenPreviewParamsProvider
 import com.example.exchangerates.ui.home.rates.state.RatesScreenEvent
 import com.example.exchangerates.ui.home.rates.state.RatesScreenState
 import com.example.exchangerates.ui.home.rates.state.RatesViewModel
 import com.example.exchangerates.ui.filters.SortOption
+import com.example.exchangerates.ui.home.state.HomeScreenEvent
 
 @Composable
 fun RatesScreen(
     viewModel: RatesViewModel = hiltViewModel(),
-    selectedSortOption: SortOption = SortOption.CodeAZ,
+    resultHandler: BackResultHandler<SortOption>,
 ) {
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
+
+    BackResultEffect(resultHandler) {
+        viewModel.onEvent(RatesScreenEvent.OnSortOptionChanged(sortOption = it))
+    }
 
     RatesScreen(
         screenState = screenState,
         onEvent = viewModel::onEvent,
-        selectedSortOption = selectedSortOption,
     )
 }
 
@@ -63,12 +69,7 @@ fun RatesScreen(
 private fun RatesScreen(
     screenState: RatesScreenState,
     onEvent: (RatesScreenEvent) -> Unit,
-    selectedSortOption: SortOption,
 ) {
-    LaunchedEffect(selectedSortOption) {
-        onEvent(RatesScreenEvent.OnSortOptionChanged(selectedSortOption))
-    }
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -188,6 +189,5 @@ private fun RatesScreenSuccessPreview(
     RatesScreen(
         screenState = state,
         onEvent = {},
-        selectedSortOption = SortOption.CodeAZ,
     )
 }
