@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.exchangerates.features.common.loading.LoadingState
 import com.example.exchangerates.features.favorites.api.FavoritePairsRepository
+import com.example.exchangerates.features.favorites.api.model.FavoritePair
 import com.example.exchangerates.features.rates.api.RatesRepository
 import com.example.exchangerates.features.rates.api.model.RatesItem
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,6 +13,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,24 +28,10 @@ class FavoritesViewModel @Inject constructor(
         .flatMapLatest {
             val baseGrouped = it.groupBy { it.baseCurrency }
 
-            combine(baseGrouped.map { (base, targets) ->
-                ratesRepository.getLatestRates(base, targets.map { it.targetCurrency })
-            }) { loadingStates ->
-                val errors = loadingStates.filterIsInstance<LoadingState.Error>()
-                val loadings = loadingStates.filterIsInstance<LoadingState.Loading>()
-                val successes =
-                    loadingStates.filterIsInstance<LoadingState.Success<List<RatesItem>>>()
-                when {
-                    loadingStates.isEmpty() -> FavoritesScreenState.Data(emptyList())
-                    errors.size == loadingStates.size -> FavoritesScreenState.Error
-                    loadings.size == loadingStates.size -> FavoritesScreenState.Loading
-                    else -> {
-                        val rates: List<RatesItem> = successes.fold(emptyList()) { list, success ->
-                            list + success.data
-                        }
-                        FavoritesScreenState.Data(rates)
-                    }
-                }
+            if (it.isNotEmpty()) {
+                fetchRates(baseGrouped)
+            } else {
+                flowOf(FavoritesScreenState.Data(emptyList()))
             }
         }
         .stateIn(
@@ -51,6 +39,27 @@ class FavoritesViewModel @Inject constructor(
             started = SharingStarted.Lazily,
             initialValue = FavoritesScreenState.Loading,
         )
+
+    private fun fetchRates(baseGrouped: Map<String, List<FavoritePair>>) =
+        combine(baseGrouped.map { (base, targets) ->
+            ratesRepository.getLatestRates(base, targets.map { it.targetCurrency })
+        }) { loadingStates ->
+            val errors = loadingStates.filterIsInstance<LoadingState.Error>()
+            val loadings = loadingStates.filterIsInstance<LoadingState.Loading>()
+            val successes =
+                loadingStates.filterIsInstance<LoadingState.Success<List<RatesItem>>>()
+            when {
+                loadingStates.isEmpty() -> FavoritesScreenState.Data(emptyList())
+                errors.size == loadingStates.size -> FavoritesScreenState.Error
+                loadings.size == loadingStates.size -> FavoritesScreenState.Loading
+                else -> {
+                    val rates: List<RatesItem> = successes.fold(emptyList()) { list, success ->
+                        list + success.data
+                    }
+                    FavoritesScreenState.Data(rates)
+                }
+            }
+        }
 
     fun onEvent(event: FavoritesScreenEvent) {
         when (event) {

@@ -13,7 +13,7 @@ import androidx.navigation.NavController
 
 private const val BACK_RESULT_KEY = "BACK_RESULT"
 
-sealed interface BackResult<out R> {
+private sealed interface BackResult<out R> {
     data object None : BackResult<Nothing>
 
     @JvmInline
@@ -25,12 +25,12 @@ fun NavController.navigateUp(result: Any?) {
     navigateUp()
 }
 
-fun <R> NavBackStackEntry.consumeBackResult() {
+private fun <R> NavBackStackEntry.consumeBackResult() {
     savedStateHandle.remove<R>(BACK_RESULT_KEY)
 }
 
 @Suppress("UNCHECKED_CAST")
-fun <R> NavBackStackEntry.peekBackResult(): BackResult<R> {
+private fun <R> NavBackStackEntry.peekBackResult(): BackResult<R> {
     return if (savedStateHandle.contains(BACK_RESULT_KEY)) {
         savedStateHandle.get<R>(BACK_RESULT_KEY).let { BackResult.Value(it as R) }
     } else {
@@ -39,7 +39,7 @@ fun <R> NavBackStackEntry.peekBackResult(): BackResult<R> {
 }
 
 @Composable
-fun <R> rememberBackResultHandler(navBackStackEntry: NavBackStackEntry): BackResultHandler<R> {
+internal fun <R> rememberBackResultHandler(navBackStackEntry: NavBackStackEntry): BackResultHandler<R> {
     return remember(navBackStackEntry) {
         BackResultHandlerImpl(navBackStackEntry)
     }
