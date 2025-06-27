@@ -1,8 +1,10 @@
 package com.example.exchangerates.ui.home.rates
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -93,8 +95,7 @@ private fun RatesScreen(
     ) { paddingValues ->
         Column(
             modifier = Modifier
-                .padding(paddingValues)
-                .padding(horizontal = 16.dp)
+                .padding(paddingValues),
         ) {
             when (screenState) {
                 is RatesScreenState.Loading -> {
@@ -109,8 +110,11 @@ private fun RatesScreen(
                 }
 
                 is RatesScreenState.Success -> {
-                    Spacer(Modifier.height(16.dp))
                     CurrencySelector(
+                        modifier = Modifier
+                            .background(AppTheme.color.bg.header)
+                            .padding(top = 8.dp, bottom = 12.dp)
+                            .padding(horizontal = 16.dp),
                         baseCurrency = screenState.baseCurrency,
                         availableCurrencies = screenState.availableCurrencies,
                         onBaseCurrencyChanged = { onEvent(RatesScreenEvent.OnBaseCurrencyChanged(it)) },
@@ -122,6 +126,7 @@ private fun RatesScreen(
                     Spacer(Modifier.height(12.dp))
                     LazyColumn(
                         verticalArrangement = Arrangement.spacedBy(8.dp),
+                        contentPadding = PaddingValues(horizontal = 16.dp),
                     ) {
                         items(
                             items = screenState.rates,

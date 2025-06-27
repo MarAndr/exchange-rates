@@ -21,6 +21,8 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -80,6 +82,7 @@ fun CurrencySelector(
             Row(
                 modifier = Modifier
                     .clip(RoundedCornerShape(16.dp))
+                    .background(AppTheme.color.bg.default)
                     .clickable {
                         expanded = !expanded
                     }
@@ -133,17 +136,25 @@ fun CurrencySelector(
         }
         Spacer(Modifier.width(8.dp))
         IconButton(
-            modifier = Modifier.border(
-                width = 1.dp,
-                color = AppTheme.color.mainColors.secondary,
-                shape = RoundedCornerShape(8.dp)
+            modifier = Modifier
+                .background(
+                    color = AppTheme.color.bg.default,
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .border(
+                    width = 1.dp,
+                    color = AppTheme.color.mainColors.secondary,
+                    shape = RoundedCornerShape(8.dp)
+                ),
+            onClick = onFilterClick,
+            colors = IconButtonDefaults.iconButtonColors(
+                containerColor = AppTheme.color.bg.default,
+                contentColor = AppTheme.color.mainColors.primary,
             ),
-            onClick = onFilterClick
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_filter),
                 contentDescription = "Filter",
-                tint = AppTheme.color.mainColors.primary,
             )
         }
     }
