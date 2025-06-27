@@ -17,6 +17,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -33,6 +36,8 @@ import com.example.exchangerates.ui.home.favorites.state.FavoritesScreenEvent
 import com.example.exchangerates.ui.home.favorites.state.FavoritesScreenState
 import com.example.exchangerates.ui.home.favorites.state.FavoritesViewModel
 import com.example.exchangerates.ui.home.rates.RatesCard
+import com.example.exchangerates.ui.home.rates.state.RatesScreenEvent
+import com.example.exchangerates.ui.home.rates.state.RatesScreenState
 
 @Composable
 fun FavoritesScreen(
@@ -70,49 +75,67 @@ private fun FavoritesScreen(
         },
         containerColor = AppTheme.color.bg.default,
     ) { paddingValues ->
-        Column(
+        val refreshState = rememberPullToRefreshState()
+        val isRefreshing = screenState is FavoritesScreenState.Data && screenState.isRefreshing
+        PullToRefreshBox(
             modifier = Modifier
-                .padding(paddingValues)
-                .padding(horizontal = 16.dp)
+                .padding(paddingValues),
+            state = refreshState,
+            isRefreshing = isRefreshing,
+            onRefresh = { onEvent(FavoritesScreenEvent.OnRefresh) },
+            indicator = {
+                Indicator(
+                    modifier = Modifier.align(Alignment.TopCenter),
+                    isRefreshing = isRefreshing,
+                    state = refreshState,
+                    containerColor = AppTheme.color.bg.default,
+                    color = AppTheme.color.mainColors.primary,
+                )
+            },
         ) {
-            when (screenState) {
-                is FavoritesScreenState.Loading -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(
-                            color = AppTheme.color.mainColors.primary
-                        )
-                    }
-                }
-
-                is FavoritesScreenState.Data -> {
-                    Spacer(Modifier.height(16.dp))
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        items(
-                            items = screenState.favoriteRates,
-                            key = { "${it.base}/${it.symbol}" }
-                        ) { rate ->
-                            RatesCard(
-                                modifier = Modifier
-                                    .animateItem(),
-                                title = "${rate.base}/${rate.symbol}",
-                                rate = rate.rate,
-                                isFavorite = true,
-                                onFavoriteClick = {
-                                    onEvent(FavoritesScreenEvent.RemoveFromFavorites(rate))
-                                }
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+            ) {
+                when (screenState) {
+                    is FavoritesScreenState.Loading -> {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(
+                                color = AppTheme.color.mainColors.primary
                             )
                         }
                     }
-                }
 
-                is FavoritesScreenState.Error -> {
-                    // TODO: Add error state
-                    Text("Error")
+                    is FavoritesScreenState.Data -> {
+                        Spacer(Modifier.height(16.dp))
+                        LazyColumn(
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            items(
+                                items = screenState.favoriteRates,
+                                key = { "${it.base}/${it.symbol}" }
+                            ) { rate ->
+                                RatesCard(
+                                    modifier = Modifier
+                                        .animateItem(),
+                                    title = "${rate.base}/${rate.symbol}",
+                                    rate = rate.rate,
+                                    isFavorite = true,
+                                    onFavoriteClick = {
+                                        onEvent(FavoritesScreenEvent.RemoveFromFavorites(rate))
+                                    }
+                                )
+                            }
+                        }
+                    }
+
+                    is FavoritesScreenState.Error -> {
+                        // TODO: Add error state
+                        Text("Error")
+                    }
                 }
             }
         }

@@ -24,6 +24,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -93,89 +96,111 @@ private fun RatesScreen(
         contentWindowInsets = WindowInsets.safeDrawing
             .exclude(WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)),
     ) { paddingValues ->
-        Column(
+        val refreshState = rememberPullToRefreshState()
+        val isRefreshing = screenState is RatesScreenState.Success && screenState.isRefreshing
+        PullToRefreshBox(
             modifier = Modifier
                 .padding(paddingValues),
+            state = refreshState,
+            isRefreshing = isRefreshing,
+            onRefresh = { onEvent(RatesScreenEvent.OnRefresh) },
+            indicator = {
+                Indicator(
+                    modifier = Modifier.align(Alignment.TopCenter),
+                    isRefreshing = isRefreshing,
+                    state = refreshState,
+                    containerColor = AppTheme.color.bg.default,
+                    color = AppTheme.color.mainColors.primary,
+                )
+            },
         ) {
-            when (screenState) {
-                is RatesScreenState.Loading -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(
-                            color = AppTheme.color.mainColors.primary
-                        )
-                    }
-                }
-
-                is RatesScreenState.Success -> {
-                    CurrencySelector(
-                        modifier = Modifier
-                            .background(AppTheme.color.bg.header)
-                            .padding(top = 8.dp, bottom = 12.dp)
-                            .padding(horizontal = 16.dp),
-                        baseCurrency = screenState.baseCurrency,
-                        availableCurrencies = screenState.availableCurrencies,
-                        onBaseCurrencyChanged = { onEvent(RatesScreenEvent.OnBaseCurrencyChanged(it)) },
-                        onFilterClick = {
-                            onEvent(RatesScreenEvent.OpenFilters)
-                        },
-                    )
-
-                    Spacer(Modifier.height(12.dp))
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(horizontal = 16.dp),
-                    ) {
-                        items(
-                            items = screenState.rates,
-                            key = { it.symbol }
-                        ) { rates ->
-                            RatesCard(
-                                modifier = Modifier
-                                    .animateItem(),
-                                title = rates.symbol,
-                                rate = rates.rate,
-                                isFavorite = rates.isFavorite,
-                                onFavoriteClick = {
-                                    onEvent(
-                                        RatesScreenEvent.OnFavoriteClick(
-                                            rate = rates,
-                                            wasFavorite = rates.isFavorite,
-                                        )
-                                    )
-                                }
+            Column {
+                when (screenState) {
+                    is RatesScreenState.Loading -> {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(
+                                color = AppTheme.color.mainColors.primary
                             )
                         }
                     }
-                }
 
-                is RatesScreenState.Error -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                    is RatesScreenState.Success -> {
+                        CurrencySelector(
+                            modifier = Modifier
+                                .background(AppTheme.color.bg.header)
+                                .padding(top = 8.dp, bottom = 12.dp)
+                                .padding(horizontal = 16.dp),
+                            baseCurrency = screenState.baseCurrency,
+                            availableCurrencies = screenState.availableCurrencies,
+                            onBaseCurrencyChanged = {
+                                onEvent(
+                                    RatesScreenEvent.OnBaseCurrencyChanged(
+                                        it
+                                    )
+                                )
+                            },
+                            onFilterClick = {
+                                onEvent(RatesScreenEvent.OpenFilters)
+                            },
+                        )
+
+                        Spacer(Modifier.height(12.dp))
+                        LazyColumn(
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            contentPadding = PaddingValues(horizontal = 16.dp),
                         ) {
-                            Text(
-                                text = stringResource(R.string.error_occurred_try_again),
-                                fontSize = 16.sp,
-                                color = AppTheme.color.mainColors.textSecondary,
-                                textAlign = TextAlign.Center
-                            )
-                            Button(
-                                colors = ButtonColors(
-                                    containerColor = AppTheme.color.mainColors.primary,
-                                    contentColor = AppTheme.color.mainColors.onPrimary,
-                                    disabledContainerColor = AppTheme.color.mainColors.textDefault,
-                                    disabledContentColor = AppTheme.color.mainColors.secondary
-                                ),
-                                onClick = { onEvent(RatesScreenEvent.OnRefresh) }
+                            items(
+                                items = screenState.rates,
+                                key = { it.symbol }
+                            ) { rates ->
+                                RatesCard(
+                                    modifier = Modifier
+                                        .animateItem(),
+                                    title = rates.symbol,
+                                    rate = rates.rate,
+                                    isFavorite = rates.isFavorite,
+                                    onFavoriteClick = {
+                                        onEvent(
+                                            RatesScreenEvent.OnFavoriteClick(
+                                                rate = rates,
+                                                wasFavorite = rates.isFavorite,
+                                            )
+                                        )
+                                    }
+                                )
+                            }
+                        }
+                    }
+
+                    is RatesScreenState.Error -> {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(16.dp)
                             ) {
-                                Text(text = stringResource(R.string.refresh))
+                                Text(
+                                    text = stringResource(R.string.error_occurred_try_again),
+                                    fontSize = 16.sp,
+                                    color = AppTheme.color.mainColors.textSecondary,
+                                    textAlign = TextAlign.Center
+                                )
+                                Button(
+                                    colors = ButtonColors(
+                                        containerColor = AppTheme.color.mainColors.primary,
+                                        contentColor = AppTheme.color.mainColors.onPrimary,
+                                        disabledContainerColor = AppTheme.color.mainColors.textDefault,
+                                        disabledContentColor = AppTheme.color.mainColors.secondary
+                                    ),
+                                    onClick = { onEvent(RatesScreenEvent.OnRefresh) }
+                                ) {
+                                    Text(text = stringResource(R.string.refresh))
+                                }
                             }
                         }
                     }

@@ -7,5 +7,6 @@ sealed interface FavoritesScreenState {
     data object Error : FavoritesScreenState
     data class Data(
         val favoriteRates: List<RatesItem>,
-    ): FavoritesScreenState
+        val isRefreshing: Boolean = false,
+    ) : FavoritesScreenState
 }

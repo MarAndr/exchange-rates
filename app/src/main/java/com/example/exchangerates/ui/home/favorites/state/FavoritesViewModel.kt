@@ -7,6 +7,8 @@ import com.example.exchangerates.features.favorites.api.FavoritePairsRepository
 import com.example.exchangerates.features.favorites.api.model.FavoritePair
 import com.example.exchangerates.features.rates.api.RatesRepository
 import com.example.exchangerates.features.rates.api.model.RatesItem
+import com.example.exchangerates.ui.common.state.RefreshLoadingState
+import com.example.exchangerates.ui.common.state.refreshable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -14,6 +16,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,14 +27,31 @@ class FavoritesViewModel @Inject constructor(
     private val ratesRepository: RatesRepository,
     private val favoriteRepository: FavoritePairsRepository,
 ) : ViewModel() {
-    val screenState = favoriteRepository.getPairs()
-        .flatMapLatest {
-            val baseGrouped = it.groupBy { it.baseCurrency }
+    private val favoritesRefreshable = refreshable {
+        favoriteRepository.getPairs()
+            .flatMapLatest {
+                val baseGrouped = it.groupBy { it.baseCurrency }
 
-            if (it.isNotEmpty()) {
-                fetchRates(baseGrouped)
-            } else {
-                flowOf(FavoritesScreenState.Data(emptyList()))
+                if (it.isNotEmpty()) {
+                    fetchRates(baseGrouped)
+                } else {
+                    flowOf(LoadingState.Success(emptyList()))
+                }
+            }
+    }
+
+    val screenState = favoritesRefreshable.flow
+        .map { ratesItemsState ->
+            when (ratesItemsState) {
+                is RefreshLoadingState.Data -> {
+                    FavoritesScreenState.Data(
+                        favoriteRates = ratesItemsState.data,
+                        isRefreshing = ratesItemsState.isLoading,
+                    )
+                }
+
+                RefreshLoadingState.Initial.Error -> FavoritesScreenState.Error
+                RefreshLoadingState.Initial.Loading -> FavoritesScreenState.Loading
             }
         }
         .stateIn(
@@ -49,14 +69,13 @@ class FavoritesViewModel @Inject constructor(
             val successes =
                 loadingStates.filterIsInstance<LoadingState.Success<List<RatesItem>>>()
             when {
-                loadingStates.isEmpty() -> FavoritesScreenState.Data(emptyList())
-                errors.size == loadingStates.size -> FavoritesScreenState.Error
-                loadings.size == loadingStates.size -> FavoritesScreenState.Loading
+                errors.size == loadingStates.size -> LoadingState.Error
+                loadings.size == loadingStates.size -> LoadingState.Loading
                 else -> {
                     val rates: List<RatesItem> = successes.fold(emptyList()) { list, success ->
                         list + success.data
                     }
-                    FavoritesScreenState.Data(rates)
+                    LoadingState.Success(rates)
                 }
             }
         }
@@ -70,6 +89,8 @@ class FavoritesViewModel @Inject constructor(
                     targetCurrency = event.ratesItem.symbol,
                 )
             }
+
+            FavoritesScreenEvent.OnRefresh -> favoritesRefreshable.refresh()
         }
     }
 }
