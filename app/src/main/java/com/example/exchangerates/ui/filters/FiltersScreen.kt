@@ -19,7 +19,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.example.exchangerates.R
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,6 +26,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.exchangerates.ui.common.R
+import com.example.exchangerates.ui.common.sorting.SortOption
+import com.example.exchangerates.ui.common.sorting.SortOptions
 import com.example.exchangerates.ui.common.theme.AppTheme
 import com.example.exchangerates.ui.filters.state.FiltersScreenEvent
 import com.example.exchangerates.ui.filters.state.FiltersScreenState

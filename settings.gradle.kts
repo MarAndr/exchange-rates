@@ -21,4 +21,14 @@ dependencyResolutionManagement {
 
 rootProject.name = "ExchangeRates"
 include(":app")
- 
+
+include(":core:loading")
+include(":core:remote")
+
+include(":features:favorites:api")
+include(":features:favorites:impl")
+include(":features:rates:api")
+include(":features:rates:impl")
+
+include(":ui:common")
+include(":ui:home")
