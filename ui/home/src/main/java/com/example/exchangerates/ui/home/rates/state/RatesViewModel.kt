@@ -10,7 +10,7 @@ import com.example.exchangerates.features.favorites.api.model.FavoritePair
 import com.example.exchangerates.features.rates.api.RatesRepository
 import com.example.exchangerates.ui.common.navigation.AppNavigator
 import com.example.exchangerates.ui.common.navigation.Destination
-import com.example.exchangerates.ui.common.sorting.SortOption
+import com.example.exchangerates.features.filters.api.model.SortOption
 import com.example.exchangerates.ui.common.state.RefreshLoadingState
 import com.example.exchangerates.ui.common.state.refreshable
 import dagger.hilt.android.lifecycle.HiltViewModel

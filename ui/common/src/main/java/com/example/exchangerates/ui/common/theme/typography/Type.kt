@@ -1,4 +1,4 @@
-package com.example.exchangerates.ui.common.theme
+package com.example.exchangerates.ui.common.theme.typography
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

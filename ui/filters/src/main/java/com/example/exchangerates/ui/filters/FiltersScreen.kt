@@ -27,8 +27,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.exchangerates.ui.common.R
-import com.example.exchangerates.ui.common.sorting.SortOption
-import com.example.exchangerates.ui.common.sorting.SortOptions
+import com.example.exchangerates.features.filters.api.model.SortOption
+import com.example.exchangerates.ui.filters.components.SortOptions
 import com.example.exchangerates.ui.common.theme.AppTheme
 import com.example.exchangerates.ui.filters.state.FiltersScreenEvent
 import com.example.exchangerates.ui.filters.state.FiltersScreenState

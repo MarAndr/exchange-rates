@@ -1,5 +1,6 @@
-package com.example.exchangerates.ui.common.sorting
+package com.example.exchangerates.ui.filters.components
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,21 +26,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.exchangerates.ui.common.R
+import com.example.exchangerates.features.filters.api.model.SortOption
 import com.example.exchangerates.ui.common.theme.AppTheme
 
 @Composable
-fun SortOptions(
+internal fun SortOptions(
     modifier: Modifier = Modifier,
     selectedOption: SortOption,
     onOptionSelected: (SortOption) -> Unit
 ) {
-    val appColors = AppTheme.color
-    Column(modifier = Modifier.padding(16.dp)) {
+    Column(modifier = modifier.padding(16.dp)) {
         Text(
             text = stringResource(R.string.sort_by),
             style = MaterialTheme.typography.labelMedium.copy(
                 fontWeight = FontWeight.Bold,
-                color = appColors.mainColors.textSecondary,
+                color = AppTheme.color.mainColors.textSecondary,
             ),
             fontSize = 12.sp,
         )
@@ -56,22 +57,30 @@ fun SortOptions(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = stringResource(option.labelResId),
+                    text = stringResource(option.getLabelStringRes()),
                     style = MaterialTheme.typography.bodyLarge,
                     fontSize = 16.sp,
-                    color = appColors.mainColors.textDefault,
+                    color = AppTheme.color.mainColors.textDefault,
                 )
                 RadioButton(
                     selected = selectedOption == option,
                     onClick = { onOptionSelected(option) },
                     colors = RadioButtonDefaults.colors(
-                        selectedColor = appColors.mainColors.primary,
-                        unselectedColor = appColors.mainColors.secondary,
+                        selectedColor = AppTheme.color.mainColors.primary,
+                        unselectedColor = AppTheme.color.mainColors.secondary,
                     )
                 )
             }
         }
     }
+}
+
+@StringRes
+private fun SortOption.getLabelStringRes() = when (this) {
+    SortOption.CodeAZ -> R.string.sort_code_az
+    SortOption.CodeZA -> R.string.sort_code_za
+    SortOption.QuoteAsc -> R.string.sort_quote_asc
+    SortOption.QuoteDesc -> R.string.sort_quote_desc
 }
 
 @Preview(showBackground = true, apiLevel = 34)
@@ -85,12 +94,5 @@ fun SortOptionsPreview() {
             onOptionSelected = { selectedOption = it }
         )
     }
-}
-
-enum class SortOption(val labelResId: Int) {
-    CodeAZ(R.string.sort_code_az),
-    CodeZA(R.string.sort_code_za),
-    QuoteAsc(R.string.sort_quote_asc),
-    QuoteDesc(R.string.sort_quote_desc)
 }
 

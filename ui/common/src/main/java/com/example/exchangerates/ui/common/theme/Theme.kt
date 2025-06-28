@@ -9,6 +9,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import com.example.exchangerates.ui.common.theme.color.AppColorTokens
 import com.example.exchangerates.ui.common.theme.color.AppColors
+import com.example.exchangerates.ui.common.theme.typography.Typography
 
 @Composable
 fun AppTheme(

@@ -1,6 +1,6 @@
 package com.example.exchangerates.ui.filters.state
 
-import com.example.exchangerates.ui.common.sorting.SortOption
+import com.example.exchangerates.features.filters.api.model.SortOption
 
 sealed interface FiltersScreenEvent {
     data object OnBackClicked : FiltersScreenEvent

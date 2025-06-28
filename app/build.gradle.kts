@@ -45,9 +45,11 @@ android {
 dependencies {
     implementation(project(":ui:common"))
     implementation(project(":ui:home"))
+    implementation(project(":ui:filters"))
 
     implementation(project(":features:favorites:impl"))
     implementation(project(":features:rates:impl"))
+    implementation(project(":features:filters:api")) // as there's no -impl
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

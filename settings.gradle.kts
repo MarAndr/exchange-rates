@@ -29,6 +29,8 @@ include(":features:favorites:api")
 include(":features:favorites:impl")
 include(":features:rates:api")
 include(":features:rates:impl")
+include(":features:filters:api")
 
 include(":ui:common")
 include(":ui:home")
+include(":ui:filters")

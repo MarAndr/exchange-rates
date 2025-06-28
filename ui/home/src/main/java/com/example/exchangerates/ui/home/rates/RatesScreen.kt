@@ -43,7 +43,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.exchangerates.ui.common.R
 import com.example.exchangerates.ui.common.navigation.BackResultEffect
 import com.example.exchangerates.ui.common.navigation.BackResultHandler
-import com.example.exchangerates.ui.common.sorting.SortOption
+import com.example.exchangerates.features.filters.api.model.SortOption
 import com.example.exchangerates.ui.common.theme.AppTheme
 import com.example.exchangerates.ui.home.rates.preview.RatesScreenPreviewParamsProvider
 import com.example.exchangerates.ui.home.rates.state.RatesScreenEvent

@@ -33,8 +33,6 @@ android {
 dependencies {
     implementation(project(":ui:common"))
 
-    implementation(project(":features:favorites:api"))
-    implementation(project(":features:rates:api"))
     implementation(project(":features:filters:api"))
 
     implementation(libs.androidx.core.ktx)
@@ -50,8 +48,6 @@ dependencies {
     implementation(libs.androidx.room.common.jvm)
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
-
-    implementation(libs.androidx.navigation.compose)
 
     implementation(libs.kotlinx.serialization.core)
     implementation(libs.kotlinx.serialization.json)
