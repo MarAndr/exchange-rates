@@ -11,7 +11,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-interface NavigationModule {
+internal interface NavigationModule {
     @Binds
     @Singleton
     fun bindAppNavigator(impl: AppNavigatorImpl): AppNavigator

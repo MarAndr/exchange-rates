@@ -43,6 +43,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:internal:db"))
+
     implementation(project(":ui:common"))
     implementation(project(":ui:home"))
     implementation(project(":ui:filters"))

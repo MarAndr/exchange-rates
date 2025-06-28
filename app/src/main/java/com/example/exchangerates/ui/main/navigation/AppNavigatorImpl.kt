@@ -9,7 +9,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AppNavigatorImpl @Inject constructor() : AppNavigator, NavigationEventsProvider {
+internal class AppNavigatorImpl @Inject constructor() : AppNavigator, NavigationEventsProvider {
     private val _channel = Channel<NavigationEvent>()
     override val navigationEvents = _channel.receiveAsFlow()
 
