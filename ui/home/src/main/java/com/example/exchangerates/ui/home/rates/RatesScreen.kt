@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -33,7 +31,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -45,6 +42,7 @@ import com.example.exchangerates.ui.common.navigation.BackResultEffect
 import com.example.exchangerates.ui.common.navigation.BackResultHandler
 import com.example.exchangerates.features.filters.api.model.SortOption
 import com.example.exchangerates.ui.common.theme.AppTheme
+import com.example.exchangerates.ui.common.ErrorBox
 import com.example.exchangerates.ui.home.rates.preview.RatesScreenPreviewParamsProvider
 import com.example.exchangerates.ui.home.rates.state.RatesScreenEvent
 import com.example.exchangerates.ui.home.rates.state.RatesScreenState
@@ -98,7 +96,8 @@ private fun RatesScreen(
         val isRefreshing = screenState is RatesScreenState.Success && screenState.isRefreshing
         PullToRefreshBox(
             modifier = Modifier
-                .padding(paddingValues),
+                .padding(paddingValues)
+                .fillMaxSize(),
             state = refreshState,
             isRefreshing = isRefreshing,
             onRefresh = { onEvent(RatesScreenEvent.OnRefresh) },
@@ -112,20 +111,20 @@ private fun RatesScreen(
                 )
             },
         ) {
-            Column {
-                when (screenState) {
-                    is RatesScreenState.Loading -> {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator(
-                                color = AppTheme.color.mainColors.primary
-                            )
-                        }
+            when (screenState) {
+                is RatesScreenState.Loading -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
+                            color = AppTheme.color.mainColors.primary
+                        )
                     }
+                }
 
-                    is RatesScreenState.Success -> {
+                is RatesScreenState.Success -> {
+                    Column(modifier = Modifier.fillMaxSize()) {
                         CurrencySelector(
                             modifier = Modifier
                                 .background(AppTheme.color.bg.header)
@@ -170,35 +169,11 @@ private fun RatesScreen(
                             }
                         }
                     }
+                }
 
-                    is RatesScreenState.Error -> {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.spacedBy(16.dp)
-                            ) {
-                                Text(
-                                    text = stringResource(R.string.error_occurred_try_again),
-                                    fontSize = 16.sp,
-                                    color = AppTheme.color.mainColors.textSecondary,
-                                    textAlign = TextAlign.Center
-                                )
-                                Button(
-                                    colors = ButtonColors(
-                                        containerColor = AppTheme.color.mainColors.primary,
-                                        contentColor = AppTheme.color.mainColors.onPrimary,
-                                        disabledContainerColor = AppTheme.color.mainColors.textDefault,
-                                        disabledContentColor = AppTheme.color.mainColors.secondary
-                                    ),
-                                    onClick = { onEvent(RatesScreenEvent.OnRefresh) }
-                                ) {
-                                    Text(text = stringResource(R.string.refresh))
-                                }
-                            }
-                        }
+                is RatesScreenState.Error -> {
+                    ErrorBox {
+                        onEvent(RatesScreenEvent.OnRefresh)
                     }
                 }
             }

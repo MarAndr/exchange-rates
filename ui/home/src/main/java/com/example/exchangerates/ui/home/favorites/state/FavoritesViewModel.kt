@@ -69,12 +69,14 @@ class FavoritesViewModel @Inject constructor(
             val successes =
                 loadingStates.filterIsInstance<LoadingState.Success<List<RatesItem>>>()
             when {
-                errors.size == loadingStates.size -> LoadingState.Error
-                loadings.size == loadingStates.size -> LoadingState.Loading
+                errors.isNotEmpty() -> LoadingState.Error
+                loadings.isNotEmpty() -> LoadingState.Loading
                 else -> {
-                    val rates: List<RatesItem> = successes.fold(emptyList()) { list, success ->
-                        list + success.data
-                    }
+                    val rates: List<RatesItem> = successes
+                        .fold<LoadingState.Success<List<RatesItem>>, List<RatesItem>>(emptyList()) { list, success ->
+                            list + success.data
+                        }
+                        .sortedBy { "${it.base}/${it.symbol}" } // alphabetic
                     LoadingState.Success(rates)
                 }
             }

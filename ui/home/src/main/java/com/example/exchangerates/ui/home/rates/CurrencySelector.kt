@@ -81,7 +81,7 @@ fun CurrencySelector(
         ) {
             Row(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(16.dp))
+                    .clip(RoundedCornerShape(8.dp))
                     .background(AppTheme.color.bg.default)
                     .clickable {
                         expanded = !expanded
@@ -89,7 +89,7 @@ fun CurrencySelector(
                     .border(
                         width = 1.dp,
                         color = AppTheme.color.mainColors.secondary,
-                        shape = RoundedCornerShape(16.dp),
+                        shape = RoundedCornerShape(8.dp),
                     )
                     .padding(horizontal = 16.dp, vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -111,7 +111,7 @@ fun CurrencySelector(
                 onDismissRequest = { expanded = false },
                 containerColor = AppTheme.color.bg.default,
                 border = BorderStroke(1.dp, AppTheme.color.mainColors.secondary),
-                shape = RoundedCornerShape(16.dp),
+                shape = RoundedCornerShape(8.dp),
                 offset = DpOffset(0.dp, -dropdownHeightDp)
             ) {
                 LazyColumn(

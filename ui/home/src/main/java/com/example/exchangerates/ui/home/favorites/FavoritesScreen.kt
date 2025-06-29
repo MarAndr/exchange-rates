@@ -6,12 +6,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
@@ -38,6 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.exchangerates.ui.common.R
 import com.example.exchangerates.ui.common.theme.AppTheme
+import com.example.exchangerates.ui.common.ErrorBox
 import com.example.exchangerates.ui.home.favorites.state.FavoritesScreenEvent
 import com.example.exchangerates.ui.home.favorites.state.FavoritesScreenState
 import com.example.exchangerates.ui.home.favorites.state.FavoritesViewModel
@@ -85,6 +84,7 @@ private fun FavoritesScreen(
         val isRefreshing = screenState is FavoritesScreenState.Data && screenState.isRefreshing
         PullToRefreshBox(
             modifier = Modifier
+                .fillMaxSize()
                 .padding(paddingValues),
             state = refreshState,
             isRefreshing = isRefreshing,
@@ -141,9 +141,9 @@ private fun FavoritesScreen(
                     }
 
                     is FavoritesScreenState.Error -> {
-                        // TODO: Add error state
-                        // TODO add refresh
-                        Text("Error")
+                        ErrorBox {
+                            onEvent(FavoritesScreenEvent.OnRefresh)
+                        }
                     }
                 }
             }
