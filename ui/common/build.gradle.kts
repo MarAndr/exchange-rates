@@ -30,8 +30,6 @@ dependencies {
     api(project(":core:loading"))
     implementation(project(":features:filters:entities"))
 
-    // todo entities
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

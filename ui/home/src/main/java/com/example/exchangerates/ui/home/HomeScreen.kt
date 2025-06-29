@@ -17,6 +17,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -101,7 +102,7 @@ private fun HomeScreen(
                         )
                     },
                     label = {
-                        Text(tab.name)
+                        Text(stringResource(tab.toTitleStringRes()))
                     },
                     onClick = {
                         onEvent(HomeScreenEvent.TabSelected(tab))
@@ -119,7 +120,12 @@ private fun HomeTab.toIconRes() = when (this) {
 }
 
 @StringRes
-private fun HomeTab.toTitleStringRes() = 0 // todo
+private fun HomeTab.toTitleStringRes(): Int{
+    return when(this){
+        Rates -> R.string.currencies_title
+        Favorites -> R.string.favorites_title
+    }
+}
 
 @Composable
 @PreviewLightDark

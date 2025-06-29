@@ -34,10 +34,10 @@ class FavoritesViewModel @Inject constructor(
 ) : ViewModel() {
     private val favoritesRefreshable = refreshable {
         getFavoritePairs()
-            .flatMapLatest {
-                val baseGrouped = it.groupBy { it.baseCurrency }
+            .flatMapLatest { favoritePairs ->
+                val baseGrouped = favoritePairs.groupBy { it.baseCurrency }
 
-                if (it.isNotEmpty()) {
+                if (favoritePairs.isNotEmpty()) {
                     fetchRates(baseGrouped)
                 } else {
                     flowOf(LoadingState.Success(emptyList()))
