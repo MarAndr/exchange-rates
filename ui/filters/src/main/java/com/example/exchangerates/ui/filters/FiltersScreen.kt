@@ -58,7 +58,6 @@ fun FiltersScreen(
             TopAppBar(
                 title = {
                     Text(
-                        color = AppTheme.color.mainColors.textDefault,
                         fontWeight = FontWeight.Bold,
                         fontSize = 22.sp,
                         text = stringResource(R.string.filters_title),

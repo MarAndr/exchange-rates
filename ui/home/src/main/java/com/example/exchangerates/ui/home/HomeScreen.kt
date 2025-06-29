@@ -1,5 +1,7 @@
 package com.example.exchangerates.ui.home
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.pager.HorizontalPager
@@ -110,10 +112,14 @@ private fun HomeScreen(
     }
 }
 
+@DrawableRes
 private fun HomeTab.toIconRes() = when (this) {
     Rates -> R.drawable.ic_currencies_menu
     Favorites -> R.drawable.ic_favorite_menu
 }
+
+@StringRes
+private fun HomeTab.toTitleStringRes() = 0 // todo
 
 @Composable
 @PreviewLightDark
