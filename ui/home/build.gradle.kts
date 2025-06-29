@@ -31,6 +31,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:dispatchers"))
+
     implementation(project(":ui:common"))
 
     implementation(project(":features:favorites:usecases"))

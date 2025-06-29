@@ -24,6 +24,7 @@ include(":app")
 
 include(":core:loading")
 include(":core:remote")
+include(":core:dispatchers")
 include(":core:internal:db")
 
 include(":features:favorites:abstractions")

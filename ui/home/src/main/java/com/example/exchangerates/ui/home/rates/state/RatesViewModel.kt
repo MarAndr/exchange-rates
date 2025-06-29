@@ -4,6 +4,7 @@ package com.example.exchangerates.ui.home.rates.state
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.exchangerates.core.dispatchers.qualifiers.IoDispatcher
 import com.example.exchangerates.core.loading.LoadingState
 import com.example.exchangerates.features.favorites.entities.FavoritePair
 import com.example.exchangerates.features.favorites.usecases.AddFavoritePairUseCase
@@ -17,6 +18,7 @@ import com.example.exchangerates.ui.common.navigation.Destination
 import com.example.exchangerates.ui.common.state.RefreshLoadingState
 import com.example.exchangerates.ui.common.state.refreshable
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,6 +41,8 @@ class RatesViewModel @Inject constructor(
     getFavoritePairs: GetFavoritePairsUseCase,
     private val addFavoritePair: AddFavoritePairUseCase,
     private val removeFavoritePair: RemoveFavoritePairUseCase,
+    @IoDispatcher
+    private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
     private val baseCurrency: MutableStateFlow<String?> = MutableStateFlow(null)
@@ -113,8 +117,7 @@ class RatesViewModel @Inject constructor(
 
     fun onEvent(event: RatesScreenEvent) {
         when (event) {
-            // todo provide dispatchers.io from DI
-            is RatesScreenEvent.OnFavoriteClick -> viewModelScope.launch(Dispatchers.IO) {
+            is RatesScreenEvent.OnFavoriteClick -> viewModelScope.launch(ioDispatcher) {
                 if (event.rate.isFavorite) {
                     removeFavoritePair(
                         baseCurrency = event.rate.base,

@@ -2,6 +2,7 @@ package com.example.exchangerates.ui.home.favorites.state
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.exchangerates.core.dispatchers.qualifiers.IoDispatcher
 import com.example.exchangerates.core.loading.LoadingState
 import com.example.exchangerates.features.favorites.entities.FavoritePair
 import com.example.exchangerates.features.favorites.usecases.GetFavoritePairsUseCase
@@ -11,7 +12,7 @@ import com.example.exchangerates.features.rates.usecases.GetLatestRatesUseCase
 import com.example.exchangerates.ui.common.state.RefreshLoadingState
 import com.example.exchangerates.ui.common.state.refreshable
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -28,6 +29,8 @@ class FavoritesViewModel @Inject constructor(
     private val getLatestRates: GetLatestRatesUseCase,
     getFavoritePairs: GetFavoritePairsUseCase,
     private val removeFavoritePair: RemoveFavoritePairUseCase,
+    @IoDispatcher
+    private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
     private val favoritesRefreshable = refreshable {
         getFavoritePairs()
@@ -86,8 +89,7 @@ class FavoritesViewModel @Inject constructor(
 
     fun onEvent(event: FavoritesScreenEvent) {
         when (event) {
-            // todo dispatchers
-            is FavoritesScreenEvent.RemoveFromFavorites -> viewModelScope.launch(Dispatchers.IO) {
+            is FavoritesScreenEvent.RemoveFromFavorites -> viewModelScope.launch(ioDispatcher) {
                 removeFavoritePair(
                     baseCurrency = event.ratesItem.base,
                     targetCurrency = event.ratesItem.symbol,
