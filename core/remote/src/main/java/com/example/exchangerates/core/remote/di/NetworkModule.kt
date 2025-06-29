@@ -1,5 +1,6 @@
 package com.example.exchangerates.core.remote.di
 
+import com.example.exchangerates.core.remote.interceptor.ApiKeyInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,6 +31,7 @@ internal class NetworkModule() {
     fun provideClient(): OkHttpClient {
         return OkHttpClient
             .Builder()
+            .addInterceptor(ApiKeyInterceptor())
             .addNetworkInterceptor(HttpLoggingInterceptor().apply {
                 setLevel(
                     HttpLoggingInterceptor.Level.BODY
