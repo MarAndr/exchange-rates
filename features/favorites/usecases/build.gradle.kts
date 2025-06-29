@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.exchangerates.features.favorites.impl"
+    namespace = "com.example.exchangerates.features.favorites.usecases"
     compileSdk = 35
 
     defaultConfig {
@@ -26,7 +26,9 @@ android {
 
 dependencies {
     implementation(project(":core:loading"))
-    api(project(":features:favorites:api"))
+
+    implementation(project(":features:favorites:abstractions"))
+    api(project(":features:favorites:entities"))
 
     implementation(libs.hilt.android)
     implementation(libs.androidx.room.common.jvm)

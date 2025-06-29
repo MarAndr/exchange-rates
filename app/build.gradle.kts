@@ -49,7 +49,7 @@ dependencies {
     implementation(project(":ui:home"))
     implementation(project(":ui:filters"))
 
-    implementation(project(":features:favorites:impl"))
+    implementation(project(":features:favorites:data"))
     implementation(project(":features:rates:impl"))
     implementation(project(":features:filters:api")) // as there's no -impl
 

@@ -33,7 +33,8 @@ android {
 dependencies {
     implementation(project(":ui:common"))
 
-    implementation(project(":features:favorites:api"))
+    implementation(project(":features:favorites:usecases"))
+
     implementation(project(":features:rates:api"))
     implementation(project(":features:filters:api"))
 

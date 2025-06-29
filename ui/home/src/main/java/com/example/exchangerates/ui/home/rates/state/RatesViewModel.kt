@@ -5,8 +5,10 @@ package com.example.exchangerates.ui.home.rates.state
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.exchangerates.core.loading.LoadingState
-import com.example.exchangerates.features.favorites.api.FavoritePairsRepository
 import com.example.exchangerates.features.favorites.api.model.FavoritePair
+import com.example.exchangerates.features.favorites.usecases.AddFavoritePairUseCase
+import com.example.exchangerates.features.favorites.usecases.GetFavoritePairsUseCase
+import com.example.exchangerates.features.favorites.usecases.RemoveFavoritePairUseCase
 import com.example.exchangerates.features.rates.api.RatesRepository
 import com.example.exchangerates.ui.common.navigation.AppNavigator
 import com.example.exchangerates.ui.common.navigation.Destination
@@ -32,7 +34,9 @@ import javax.inject.Inject
 class RatesViewModel @Inject constructor(
     private val appNavigator: AppNavigator,
     private val ratesRepository: RatesRepository,
-    private val favoriteRepository: FavoritePairsRepository,
+    getFavoritePairs: GetFavoritePairsUseCase,
+    private val addFavoritePair: AddFavoritePairUseCase,
+    private val removeFavoritePair: RemoveFavoritePairUseCase,
 ) : ViewModel() {
 
     private val baseCurrency: MutableStateFlow<String?> = MutableStateFlow(null)
@@ -60,7 +64,7 @@ class RatesViewModel @Inject constructor(
         baseCurrency,
         ratesRefreshable.flow,
         currenciesRefreshable.flow,
-        favoriteRepository.getPairs(),
+        getFavoritePairs(),
         sortOption,
     ) { baseCurrency, ratesState, currenciesState, favoritePairs, currentSortOption ->
         when (currenciesState) {
@@ -88,7 +92,7 @@ class RatesViewModel @Inject constructor(
                                 SortOption.QuoteDesc -> ratesList.sortedByDescending { it.rate }
                             }
                         }
-                        
+
                         RatesScreenState.Success(
                             baseCurrency = baseCurrency.orEmpty(),
                             rates = rates,
@@ -110,7 +114,7 @@ class RatesViewModel @Inject constructor(
             // todo provide dispatchers.io from DI
             is RatesScreenEvent.OnFavoriteClick -> viewModelScope.launch(Dispatchers.IO) {
                 if (event.rate.isFavorite) {
-                    favoriteRepository.removePair(
+                    removeFavoritePair(
                         baseCurrency = event.rate.base,
                         targetCurrency = event.rate.symbol
                     )
@@ -119,7 +123,7 @@ class RatesViewModel @Inject constructor(
                         baseCurrency = event.rate.base,
                         targetCurrency = event.rate.symbol,
                     )
-                    favoriteRepository.addPair(pair)
+                    addFavoritePair(pair)
                 }
             }
 

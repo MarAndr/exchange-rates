@@ -26,8 +26,11 @@ include(":core:loading")
 include(":core:remote")
 include(":core:internal:db")
 
-include(":features:favorites:api")
-include(":features:favorites:impl")
+include(":features:favorites:abstractions")
+include(":features:favorites:data")
+include(":features:favorites:usecases")
+include(":features:favorites:entities")
+
 include(":features:rates:api")
 include(":features:rates:impl")
 include(":features:filters:api")

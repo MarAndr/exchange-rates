@@ -3,8 +3,9 @@ package com.example.exchangerates.ui.home.favorites.state
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.exchangerates.core.loading.LoadingState
-import com.example.exchangerates.features.favorites.api.FavoritePairsRepository
 import com.example.exchangerates.features.favorites.api.model.FavoritePair
+import com.example.exchangerates.features.favorites.usecases.GetFavoritePairsUseCase
+import com.example.exchangerates.features.favorites.usecases.RemoveFavoritePairUseCase
 import com.example.exchangerates.features.rates.api.RatesRepository
 import com.example.exchangerates.features.rates.api.model.RatesItem
 import com.example.exchangerates.ui.common.state.RefreshLoadingState
@@ -25,10 +26,11 @@ import javax.inject.Inject
 @HiltViewModel
 class FavoritesViewModel @Inject constructor(
     private val ratesRepository: RatesRepository,
-    private val favoriteRepository: FavoritePairsRepository,
+    getFavoritePairs: GetFavoritePairsUseCase,
+    private val removeFavoritePair: RemoveFavoritePairUseCase,
 ) : ViewModel() {
     private val favoritesRefreshable = refreshable {
-        favoriteRepository.getPairs()
+        getFavoritePairs()
             .flatMapLatest {
                 val baseGrouped = it.groupBy { it.baseCurrency }
 
@@ -86,7 +88,7 @@ class FavoritesViewModel @Inject constructor(
         when (event) {
             // todo dispatchers
             is FavoritesScreenEvent.RemoveFromFavorites -> viewModelScope.launch(Dispatchers.IO) {
-                favoriteRepository.removePair(
+                removeFavoritePair(
                     baseCurrency = event.ratesItem.base,
                     targetCurrency = event.ratesItem.symbol,
                 )
