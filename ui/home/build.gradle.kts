@@ -34,9 +34,9 @@ dependencies {
     implementation(project(":ui:common"))
 
     implementation(project(":features:favorites:usecases"))
+    implementation(project(":features:rates:usecases"))
 
-    implementation(project(":features:rates:api"))
-    implementation(project(":features:filters:api"))
+    implementation(project(":features:filters:entities"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

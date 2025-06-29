@@ -3,11 +3,11 @@ package com.example.exchangerates.ui.home.favorites.state
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.exchangerates.core.loading.LoadingState
-import com.example.exchangerates.features.favorites.api.model.FavoritePair
+import com.example.exchangerates.features.favorites.entities.FavoritePair
 import com.example.exchangerates.features.favorites.usecases.GetFavoritePairsUseCase
 import com.example.exchangerates.features.favorites.usecases.RemoveFavoritePairUseCase
-import com.example.exchangerates.features.rates.api.RatesRepository
-import com.example.exchangerates.features.rates.api.model.RatesItem
+import com.example.exchangerates.features.rates.entities.RatesItem
+import com.example.exchangerates.features.rates.usecases.GetLatestRatesUseCase
 import com.example.exchangerates.ui.common.state.RefreshLoadingState
 import com.example.exchangerates.ui.common.state.refreshable
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,7 +25,7 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class FavoritesViewModel @Inject constructor(
-    private val ratesRepository: RatesRepository,
+    private val getLatestRates: GetLatestRatesUseCase,
     getFavoritePairs: GetFavoritePairsUseCase,
     private val removeFavoritePair: RemoveFavoritePairUseCase,
 ) : ViewModel() {
@@ -64,7 +64,7 @@ class FavoritesViewModel @Inject constructor(
 
     private fun fetchRates(baseGrouped: Map<String, List<FavoritePair>>) =
         combine(baseGrouped.map { (base, targets) ->
-            ratesRepository.getLatestRates(base, targets.map { it.targetCurrency })
+            getLatestRates(base, targets.map { it.targetCurrency })
         }) { loadingStates ->
             val errors = loadingStates.filterIsInstance<LoadingState.Error>()
             val loadings = loadingStates.filterIsInstance<LoadingState.Loading>()

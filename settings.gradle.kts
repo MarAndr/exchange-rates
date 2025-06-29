@@ -31,9 +31,12 @@ include(":features:favorites:data")
 include(":features:favorites:usecases")
 include(":features:favorites:entities")
 
-include(":features:rates:api")
-include(":features:rates:impl")
-include(":features:filters:api")
+include(":features:rates:abstractions")
+include(":features:rates:data")
+include(":features:rates:usecases")
+include(":features:rates:entities")
+
+include(":features:filters:entities")
 
 include(":ui:common")
 include(":ui:home")

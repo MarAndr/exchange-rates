@@ -5,14 +5,15 @@ package com.example.exchangerates.ui.home.rates.state
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.exchangerates.core.loading.LoadingState
-import com.example.exchangerates.features.favorites.api.model.FavoritePair
+import com.example.exchangerates.features.favorites.entities.FavoritePair
 import com.example.exchangerates.features.favorites.usecases.AddFavoritePairUseCase
 import com.example.exchangerates.features.favorites.usecases.GetFavoritePairsUseCase
 import com.example.exchangerates.features.favorites.usecases.RemoveFavoritePairUseCase
-import com.example.exchangerates.features.rates.api.RatesRepository
+import com.example.exchangerates.features.filters.entities.SortOption
+import com.example.exchangerates.features.rates.usecases.GetCurrenciesListUseCase
+import com.example.exchangerates.features.rates.usecases.GetLatestRatesUseCase
 import com.example.exchangerates.ui.common.navigation.AppNavigator
 import com.example.exchangerates.ui.common.navigation.Destination
-import com.example.exchangerates.features.filters.api.model.SortOption
 import com.example.exchangerates.ui.common.state.RefreshLoadingState
 import com.example.exchangerates.ui.common.state.refreshable
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,7 +34,8 @@ import javax.inject.Inject
 @HiltViewModel
 class RatesViewModel @Inject constructor(
     private val appNavigator: AppNavigator,
-    private val ratesRepository: RatesRepository,
+    private val getLatestRates: GetLatestRatesUseCase,
+    private val getCurrenciesList: GetCurrenciesListUseCase,
     getFavoritePairs: GetFavoritePairsUseCase,
     private val addFavoritePair: AddFavoritePairUseCase,
     private val removeFavoritePair: RemoveFavoritePairUseCase,
@@ -46,13 +48,13 @@ class RatesViewModel @Inject constructor(
         baseCurrency
             .filterNotNull()
             .flatMapLatest { baseCurrency ->
-                ratesRepository.getLatestRates(baseCurrency)
+                getLatestRates(baseCurrency)
             }
             .onStart { emit(LoadingState.Loading) }
     }
 
     private val currenciesRefreshable = refreshable {
-        ratesRepository.getCurrencyList()
+        getCurrenciesList()
             .onEach { state ->
                 if (state is LoadingState.Success) {
                     baseCurrency.value = state.data.firstOrNull()?.symbol

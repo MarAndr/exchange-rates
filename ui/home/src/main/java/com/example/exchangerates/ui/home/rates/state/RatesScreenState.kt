@@ -1,6 +1,6 @@
 package com.example.exchangerates.ui.home.rates.state
 
-import com.example.exchangerates.features.rates.api.model.Currency
+import com.example.exchangerates.features.rates.entities.Currency
 
 
 sealed interface RatesScreenState {

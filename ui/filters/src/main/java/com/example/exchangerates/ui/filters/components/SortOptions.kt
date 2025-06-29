@@ -26,7 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.exchangerates.ui.common.R
-import com.example.exchangerates.features.filters.api.model.SortOption
+import com.example.exchangerates.features.filters.entities.SortOption
 import com.example.exchangerates.ui.common.theme.AppTheme
 
 @Composable

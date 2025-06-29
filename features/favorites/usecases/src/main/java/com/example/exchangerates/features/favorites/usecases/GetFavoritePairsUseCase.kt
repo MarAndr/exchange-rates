@@ -1,7 +1,7 @@
 package com.example.exchangerates.features.favorites.usecases
 
-import com.example.exchangerates.features.favorites.api.FavoritePairsRepository
-import com.example.exchangerates.features.favorites.api.model.FavoritePair
+import com.example.exchangerates.features.favorites.abstractions.FavoritePairsRepository
+import com.example.exchangerates.features.favorites.entities.FavoritePair
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

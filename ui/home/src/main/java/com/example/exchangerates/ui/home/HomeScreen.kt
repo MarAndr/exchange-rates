@@ -23,7 +23,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.exchangerates.ui.common.R
 import com.example.exchangerates.ui.common.navigation.BackResultHandler
 import com.example.exchangerates.ui.common.navigation.PreviewBackResultHandler
-import com.example.exchangerates.features.filters.api.model.SortOption
+import com.example.exchangerates.features.filters.entities.SortOption
 import com.example.exchangerates.ui.common.theme.AppTheme
 import com.example.exchangerates.ui.home.favorites.FavoritesScreen
 import com.example.exchangerates.ui.home.rates.RatesScreen

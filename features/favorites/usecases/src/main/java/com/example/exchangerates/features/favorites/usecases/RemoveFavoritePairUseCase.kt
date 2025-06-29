@@ -1,6 +1,6 @@
 package com.example.exchangerates.features.favorites.usecases
 
-import com.example.exchangerates.features.favorites.api.FavoritePairsRepository
+import com.example.exchangerates.features.favorites.abstractions.FavoritePairsRepository
 import javax.inject.Inject
 
 class RemoveFavoritePairUseCase @Inject constructor(

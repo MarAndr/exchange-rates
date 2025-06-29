@@ -1,6 +1,6 @@
 package com.example.exchangerates.ui.common.navigation
 
-import com.example.exchangerates.features.filters.api.model.SortOption
+import com.example.exchangerates.features.filters.entities.SortOption
 import kotlinx.serialization.Serializable
 
 sealed interface Destination {

@@ -1,6 +1,6 @@
 package com.example.exchangerates.features.favorites.impl.db
 
-import com.example.exchangerates.features.favorites.api.model.FavoritePair
+import com.example.exchangerates.features.favorites.entities.FavoritePair
 import kotlinx.coroutines.flow.Flow
 
 internal interface FavoriteDataSource {

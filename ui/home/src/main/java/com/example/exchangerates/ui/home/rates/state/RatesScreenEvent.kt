@@ -1,6 +1,6 @@
 package com.example.exchangerates.ui.home.rates.state
 
-import com.example.exchangerates.features.filters.api.model.SortOption
+import com.example.exchangerates.features.filters.entities.SortOption
 
 sealed interface RatesScreenEvent {
     data class OnFavoriteClick(

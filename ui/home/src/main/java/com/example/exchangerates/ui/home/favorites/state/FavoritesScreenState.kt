@@ -1,6 +1,6 @@
 package com.example.exchangerates.ui.home.favorites.state
 
-import com.example.exchangerates.features.rates.api.model.RatesItem
+import com.example.exchangerates.features.rates.entities.RatesItem
 
 sealed interface FavoritesScreenState {
     data object Loading : FavoritesScreenState

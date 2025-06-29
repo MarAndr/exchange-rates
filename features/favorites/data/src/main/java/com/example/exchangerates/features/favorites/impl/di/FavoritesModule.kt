@@ -1,6 +1,6 @@
 package com.example.exchangerates.features.favorites.impl.di
 
-import com.example.exchangerates.features.favorites.api.FavoritePairsRepository
+import com.example.exchangerates.features.favorites.abstractions.FavoritePairsRepository
 import com.example.exchangerates.features.favorites.impl.FavoritePairsRepositoryImpl
 import com.example.exchangerates.features.favorites.impl.db.FavoriteDataSource
 import com.example.exchangerates.features.favorites.impl.db.FavoriteDataSourceImpl

@@ -32,8 +32,7 @@ android {
 
 dependencies {
     implementation(project(":ui:common"))
-
-    implementation(project(":features:filters:api"))
+    implementation(project(":features:filters:entities"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
