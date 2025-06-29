@@ -2,8 +2,8 @@ package com.example.exchangerates.core.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.exchangerates.features.favorites.impl.db.FavoritePairsDao
-import com.example.exchangerates.features.favorites.impl.db.model.FavoritePairEntity
+import com.example.exchangerates.features.favorites.data.db.FavoritePairsDao
+import com.example.exchangerates.features.favorites.data.db.model.FavoritePairEntity
 
 @Database(
     entities = [FavoritePairEntity::class],

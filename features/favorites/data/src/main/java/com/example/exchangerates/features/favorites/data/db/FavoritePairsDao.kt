@@ -1,12 +1,11 @@
-package com.example.exchangerates.features.favorites.impl.db
+package com.example.exchangerates.features.favorites.data.db
 
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.exchangerates.features.favorites.impl.db.model.FavoritePairEntity
+import com.example.exchangerates.features.favorites.data.db.model.FavoritePairEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

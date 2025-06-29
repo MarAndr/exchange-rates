@@ -1,4 +1,4 @@
-package com.example.exchangerates.features.favorites.impl.db
+package com.example.exchangerates.features.favorites.data.db
 
 import com.example.exchangerates.features.favorites.entities.FavoritePair
 import kotlinx.coroutines.flow.Flow

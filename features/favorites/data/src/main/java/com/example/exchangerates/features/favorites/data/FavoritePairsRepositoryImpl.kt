@@ -1,8 +1,8 @@
-package com.example.exchangerates.features.favorites.impl
+package com.example.exchangerates.features.favorites.data
 
 import com.example.exchangerates.features.favorites.abstractions.FavoritePairsRepository
 import com.example.exchangerates.features.favorites.entities.FavoritePair
-import com.example.exchangerates.features.favorites.impl.db.FavoriteDataSource
+import com.example.exchangerates.features.favorites.data.db.FavoriteDataSource
 import javax.inject.Inject
 
 internal class FavoritePairsRepositoryImpl @Inject constructor(

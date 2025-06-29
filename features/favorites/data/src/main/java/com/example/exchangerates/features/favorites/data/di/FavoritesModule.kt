@@ -1,9 +1,9 @@
-package com.example.exchangerates.features.favorites.impl.di
+package com.example.exchangerates.features.favorites.data.di
 
 import com.example.exchangerates.features.favorites.abstractions.FavoritePairsRepository
-import com.example.exchangerates.features.favorites.impl.FavoritePairsRepositoryImpl
-import com.example.exchangerates.features.favorites.impl.db.FavoriteDataSource
-import com.example.exchangerates.features.favorites.impl.db.FavoriteDataSourceImpl
+import com.example.exchangerates.features.favorites.data.FavoritePairsRepositoryImpl
+import com.example.exchangerates.features.favorites.data.db.FavoriteDataSource
+import com.example.exchangerates.features.favorites.data.db.FavoriteDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

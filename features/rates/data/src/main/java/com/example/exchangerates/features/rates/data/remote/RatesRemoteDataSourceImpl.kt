@@ -2,6 +2,7 @@ package com.example.exchangerates.features.rates.data.remote
 
 import com.example.exchangerates.core.remote.calls.apiCall
 import com.example.exchangerates.core.loading.LoadingState
+import com.example.exchangerates.features.rates.data.mapper.RatesMapper
 import com.example.exchangerates.features.rates.entities.Currency
 import com.example.exchangerates.features.rates.entities.RatesItem
 import kotlinx.coroutines.flow.Flow
@@ -16,13 +17,7 @@ internal class RatesRemoteDataSourceImpl @Inject constructor(
         targetCurrencies: List<String>,
     ) = apiCall(
         mapper = { rates ->
-            rates.rates.map { (symbol, rate) ->
-                RatesItem(
-                    base = rates.base.orEmpty(),
-                    symbol = symbol,
-                    rate = rate,
-                )
-            }
+            RatesMapper.mapRateDtoToRatesItems(rates)
         },
         call = {
             val targetCurrenciesList = targetCurrencies.joinToString(",")
@@ -32,12 +27,7 @@ internal class RatesRemoteDataSourceImpl @Inject constructor(
 
     override fun getCurrencyList(): Flow<LoadingState<List<Currency>>> = apiCall(
         mapper = { currencyList ->
-            currencyList.symbols?.map { (symbol, name) ->
-                Currency(
-                    name = name,
-                    symbol = symbol
-                )
-            } ?: emptyList()
+            RatesMapper.mapCurrencyListDtoToCurrencies(currencyList)
         },
         call = { exchangeApi.getCurrencyNamesList() },
     )

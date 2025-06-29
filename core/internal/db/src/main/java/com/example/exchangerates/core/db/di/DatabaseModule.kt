@@ -3,7 +3,7 @@ package com.example.exchangerates.core.db.di
 import android.app.Application
 import androidx.room.Room
 import com.example.exchangerates.core.db.AppDatabase
-import com.example.exchangerates.features.favorites.impl.db.FavoritePairsDao
+import com.example.exchangerates.features.favorites.data.db.FavoritePairsDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

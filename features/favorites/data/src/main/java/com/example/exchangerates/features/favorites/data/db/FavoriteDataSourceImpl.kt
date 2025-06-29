@@ -1,7 +1,7 @@
-package com.example.exchangerates.features.favorites.impl.db
+package com.example.exchangerates.features.favorites.data.db
 
 import com.example.exchangerates.features.favorites.entities.FavoritePair
-import com.example.exchangerates.features.favorites.impl.db.model.FavoritePairEntity
+import com.example.exchangerates.features.favorites.data.mapper.FavoritePairMapper
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -10,21 +10,11 @@ internal class FavoriteDataSourceImpl @Inject constructor(
 ) : FavoriteDataSource {
     override fun getFavoritePairs() = favoritePairsDao.getPairs()
         .map { list ->
-            // todo add mappers
-            list.map { entity ->
-                FavoritePair(
-                    id = entity.id,
-                    baseCurrency = entity.baseCurrency,
-                    targetCurrency = entity.targetCurrency,
-                )
-            }
+            FavoritePairMapper.mapToDomainList(list)
         }
 
     override suspend fun addFavoritePair(pair: FavoritePair) {
-        val entity = FavoritePairEntity(
-            baseCurrency = pair.baseCurrency,
-            targetCurrency = pair.targetCurrency,
-        )
+        val entity = FavoritePairMapper.mapToEntity(pair)
         favoritePairsDao.addPair(entity)
     }
 
