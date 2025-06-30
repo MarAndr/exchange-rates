@@ -15,3 +15,7 @@ sealed interface RefreshLoadingState<out T> {
         val isLoading: Boolean,
     ) : RefreshLoadingState<T>
 }
+
+fun <T> RefreshLoadingState<T>.isLoading() =
+    this is RefreshLoadingState.Initial.Loading ||
+            (this is RefreshLoadingState.Data && this.isLoading)

@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,12 +27,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.exchangerates.ui.common.R
 import com.example.exchangerates.ui.common.theme.AppTheme
+import java.util.Locale
 
 @Composable
 fun RatesCard(
     modifier: Modifier = Modifier,
     title: String,
-    rate: Double,
+    rate: Double?,
     isFavorite: Boolean,
     onFavoriteClick: () -> Unit
 ) {
@@ -57,7 +57,7 @@ fun RatesCard(
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
-                text = String.format("%.6f", rate),
+                text = rate?.let { String.format(Locale.getDefault(), "%.6f", rate) } ?: "-",
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 16.sp,

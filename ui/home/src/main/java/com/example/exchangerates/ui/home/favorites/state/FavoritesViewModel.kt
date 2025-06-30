@@ -10,6 +10,7 @@ import com.example.exchangerates.features.favorites.usecases.RemoveFavoritePairU
 import com.example.exchangerates.features.rates.entities.RatesItem
 import com.example.exchangerates.features.rates.usecases.GetLatestRatesUseCase
 import com.example.exchangerates.ui.common.state.RefreshLoadingState
+import com.example.exchangerates.ui.common.state.isLoading
 import com.example.exchangerates.ui.common.state.refreshable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -18,7 +19,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -45,25 +45,38 @@ class FavoritesViewModel @Inject constructor(
             }
     }
 
-    val screenState = favoritesRefreshable.flow
-        .map { ratesItemsState ->
-            when (ratesItemsState) {
-                is RefreshLoadingState.Data -> {
-                    FavoritesScreenState.Data(
-                        favoriteRates = ratesItemsState.data,
-                        isRefreshing = ratesItemsState.isLoading,
-                    )
-                }
-
-                RefreshLoadingState.Initial.Error -> FavoritesScreenState.Error
-                RefreshLoadingState.Initial.Loading -> FavoritesScreenState.Loading
+    val screenState = combine(
+        getFavoritePairs(),
+        favoritesRefreshable.flow,
+    ) { favoritePairs, ratesItemsState ->
+        val ratesItems = ratesItemsState as? RefreshLoadingState.Data
+        val favoriteRates = favoritePairs.map {
+            FavoriteRateUiModel(
+                base = it.baseCurrency,
+                symbol = it.targetCurrency,
+                rate = null,
+            )
+        }.map { favoriteUiModel ->
+            if (ratesItems == null) {
+                favoriteUiModel
+            } else {
+                val rate = ratesItems.data
+                    .find { it.base == favoriteUiModel.base && it.symbol == favoriteUiModel.symbol }
+                    ?.rate
+                favoriteUiModel.copy(
+                    rate = rate,
+                )
             }
         }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Lazily,
-            initialValue = FavoritesScreenState.Loading,
+        FavoritesScreenState.Data(
+            favoriteRates = favoriteRates,
+            isLoading = ratesItemsState.isLoading(),
         )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Lazily,
+        initialValue = FavoritesScreenState.Data(favoriteRates = emptyList()),
+    )
 
     private fun fetchRates(baseGrouped: Map<String, List<FavoritePair>>) =
         combine(baseGrouped.map { (base, targets) ->
@@ -87,7 +100,7 @@ class FavoritesViewModel @Inject constructor(
             }
         }
 
-    fun onEvent(event: FavoritesScreenEvent) {
+    internal fun onEvent(event: FavoritesScreenEvent) {
         when (event) {
             is FavoritesScreenEvent.RemoveFromFavorites -> viewModelScope.launch(ioDispatcher) {
                 removeFavoritePair(
