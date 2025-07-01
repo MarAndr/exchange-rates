@@ -27,6 +27,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -34,6 +36,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.exchangerates.ui.common.R
 import com.example.exchangerates.ui.common.components.EmptyStateBox
 import com.example.exchangerates.ui.common.theme.AppTheme
+import com.example.exchangerates.ui.home.favorites.preview.FavoritesScreenPreviewParamsProvider
 import com.example.exchangerates.ui.home.favorites.state.FavoritesScreenEvent
 import com.example.exchangerates.ui.home.favorites.state.FavoritesScreenState
 import com.example.exchangerates.ui.home.favorites.state.FavoritesViewModel
@@ -127,4 +130,14 @@ private fun FavoritesScreen(
     }
 }
 
-// todo add preview
+@Composable
+@Preview(showBackground = true, apiLevel = 34)
+private fun FavoritesScreenPreview(
+    @PreviewParameter(FavoritesScreenPreviewParamsProvider::class)
+    state: FavoritesScreenState,
+) = AppTheme {
+    FavoritesScreen(
+        screenState = state,
+        onEvent = {},
+    )
+}
