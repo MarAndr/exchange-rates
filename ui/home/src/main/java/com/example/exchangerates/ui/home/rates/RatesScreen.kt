@@ -42,7 +42,7 @@ import com.example.exchangerates.ui.common.navigation.BackResultEffect
 import com.example.exchangerates.ui.common.navigation.BackResultHandler
 import com.example.exchangerates.features.filters.entities.SortOption
 import com.example.exchangerates.ui.common.theme.AppTheme
-import com.example.exchangerates.ui.common.ErrorBox
+import com.example.exchangerates.ui.common.components.ErrorBox
 import com.example.exchangerates.ui.home.rates.preview.RatesScreenPreviewParamsProvider
 import com.example.exchangerates.ui.home.rates.state.RatesScreenEvent
 import com.example.exchangerates.ui.home.rates.state.RatesScreenState
@@ -93,7 +93,7 @@ private fun RatesScreen(
             .exclude(WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)),
     ) { paddingValues ->
         val refreshState = rememberPullToRefreshState()
-        val isRefreshing = screenState is RatesScreenState.Success && screenState.isRefreshing
+        val isRefreshing = screenState is RatesScreenState.Data && screenState.isRefreshing
         PullToRefreshBox(
             modifier = Modifier
                 .padding(paddingValues)
@@ -123,7 +123,7 @@ private fun RatesScreen(
                     }
                 }
 
-                is RatesScreenState.Success -> {
+                is RatesScreenState.Data -> {
                     Column(modifier = Modifier.fillMaxSize()) {
                         CurrencySelector(
                             modifier = Modifier
@@ -143,29 +143,44 @@ private fun RatesScreen(
                         )
 
                         Spacer(Modifier.height(12.dp))
-                        LazyColumn(
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                            contentPadding = PaddingValues(horizontal = 16.dp),
-                        ) {
-                            items(
-                                items = screenState.rates,
-                                key = { it.symbol }
-                            ) { rates ->
-                                RatesCard(
-                                    modifier = Modifier
-                                        .animateItem(),
-                                    title = rates.symbol,
-                                    rate = rates.rate,
-                                    isFavorite = rates.isFavorite,
-                                    onFavoriteClick = {
-                                        onEvent(
-                                            RatesScreenEvent.OnFavoriteClick(
-                                                rate = rates,
-                                                wasFavorite = rates.isFavorite,
-                                            )
+
+                        when {
+                            screenState.isRefreshing && screenState.rates.isEmpty() -> {
+                                Unit
+                            }
+
+                            screenState.isError && screenState.rates.isEmpty() -> {
+                                ErrorBox {
+                                    onEvent(RatesScreenEvent.OnRefresh)
+                                }
+                            }
+
+                            else -> {
+                                LazyColumn(
+                                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                                    contentPadding = PaddingValues(horizontal = 16.dp),
+                                ) {
+                                    items(
+                                        items = screenState.rates,
+                                        key = { it.symbol }
+                                    ) { rates ->
+                                        RatesCard(
+                                            modifier = Modifier
+                                                .animateItem(),
+                                            title = rates.symbol,
+                                            rate = rates.rate,
+                                            isFavorite = rates.isFavorite,
+                                            onFavoriteClick = {
+                                                onEvent(
+                                                    RatesScreenEvent.OnFavoriteClick(
+                                                        rate = rates,
+                                                        wasFavorite = rates.isFavorite,
+                                                    )
+                                                )
+                                            }
                                         )
                                     }
-                                )
+                                }
                             }
                         }
                     }

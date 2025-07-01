@@ -19,7 +19,6 @@ import com.example.exchangerates.ui.common.state.RefreshLoadingState
 import com.example.exchangerates.ui.common.state.refreshable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -60,7 +59,7 @@ class RatesViewModel @Inject constructor(
     private val currenciesRefreshable = refreshable {
         getCurrenciesList()
             .onEach { state ->
-                if (state is LoadingState.Success) {
+                if (state is LoadingState.Success && baseCurrency.value == null) {
                     baseCurrency.value = state.data.firstOrNull()?.symbol
                 }
             }
@@ -81,29 +80,34 @@ class RatesViewModel @Inject constructor(
                     RefreshLoadingState.Initial.Loading -> RatesScreenState.Loading
                     RefreshLoadingState.Initial.Error -> RatesScreenState.Error
                     is RefreshLoadingState.Data -> {
-                        val rates = ratesState.data.map { rate ->
-                            val isFavorite = favoritePairs
-                                .find { it.baseCurrency == baseCurrency && it.targetCurrency == rate.symbol } != null
-                            RatesUiModel(
-                                base = baseCurrency.orEmpty(),
-                                symbol = rate.symbol,
-                                rate = rate.rate,
-                                isFavorite = isFavorite,
-                            )
-                        }.let { ratesList ->
-                            when (currentSortOption) {
-                                SortOption.CodeAZ -> ratesList.sortedBy { it.symbol }
-                                SortOption.CodeZA -> ratesList.sortedByDescending { it.symbol }
-                                SortOption.QuoteAsc -> ratesList.sortedBy { it.rate }
-                                SortOption.QuoteDesc -> ratesList.sortedByDescending { it.rate }
+                        val rates = if (ratesState.isError) {
+                            emptyList() // when an error occurred while changing currency
+                        } else {
+                            ratesState.data.map { rate ->
+                                val isFavorite = favoritePairs
+                                    .find { it.baseCurrency == baseCurrency && it.targetCurrency == rate.symbol } != null
+                                RatesUiModel(
+                                    base = baseCurrency.orEmpty(),
+                                    symbol = rate.symbol,
+                                    rate = rate.rate,
+                                    isFavorite = isFavorite,
+                                )
+                            }.let { ratesList ->
+                                when (currentSortOption) {
+                                    SortOption.CodeAZ -> ratesList.sortedBy { it.symbol }
+                                    SortOption.CodeZA -> ratesList.sortedByDescending { it.symbol }
+                                    SortOption.QuoteAsc -> ratesList.sortedBy { it.rate }
+                                    SortOption.QuoteDesc -> ratesList.sortedByDescending { it.rate }
+                                }
                             }
                         }
 
-                        RatesScreenState.Success(
+                        RatesScreenState.Data(
                             baseCurrency = baseCurrency.orEmpty(),
                             rates = rates,
                             availableCurrencies = currenciesState.data,
                             isRefreshing = ratesState.isLoading || currenciesState.isLoading,
+                            isError = ratesState.isError,
                         )
                     }
                 }

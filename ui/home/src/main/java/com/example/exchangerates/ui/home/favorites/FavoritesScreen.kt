@@ -3,7 +3,6 @@
 package com.example.exchangerates.ui.home.favorites
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -33,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.exchangerates.ui.common.R
+import com.example.exchangerates.ui.common.components.EmptyStateBox
 import com.example.exchangerates.ui.common.theme.AppTheme
 import com.example.exchangerates.ui.home.favorites.state.FavoritesScreenEvent
 import com.example.exchangerates.ui.home.favorites.state.FavoritesScreenState
@@ -78,56 +78,53 @@ private fun FavoritesScreen(
             .exclude(WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)),
     ) { paddingValues ->
         val refreshState = rememberPullToRefreshState()
-        val isRefreshing = screenState is FavoritesScreenState.Data && screenState.isLoading
         PullToRefreshBox(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
             state = refreshState,
-            isRefreshing = isRefreshing,
+            isRefreshing = screenState.isLoading,
             onRefresh = { onEvent(FavoritesScreenEvent.OnRefresh) },
             indicator = {
                 Indicator(
                     modifier = Modifier.align(Alignment.TopCenter),
-                    isRefreshing = isRefreshing,
+                    isRefreshing = screenState.isLoading,
                     state = refreshState,
                     containerColor = AppTheme.color.bg.default,
                     color = AppTheme.color.mainColors.primary,
                 )
             },
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-            ) {
-                when (screenState) {
-                    is FavoritesScreenState.Data -> {
-                        // todo empty screen
-                        LazyColumn(
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                            contentPadding = PaddingValues(
-                                top = 16.dp,
-                            )
-                        ) {
-                            items(
-                                items = screenState.favoriteRates,
-                                key = { "${it.base}/${it.symbol}" }
-                            ) { rate ->
-                                RatesCard(
-                                    modifier = Modifier
-                                        .animateItem(),
-                                    title = "${rate.base}/${rate.symbol}",
-                                    rate = rate.rate,
-                                    isFavorite = true,
-                                    onFavoriteClick = {
-                                        onEvent(FavoritesScreenEvent.RemoveFromFavorites(rate))
-                                    }
-                                )
+            if (screenState.favoriteRates.isEmpty()) {
+                EmptyStateBox()
+            } else {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(
+                        top = 16.dp,
+                        start = 16.dp,
+                        end = 16.dp,
+                    )
+                ) {
+                    items(
+                        items = screenState.favoriteRates,
+                        key = { "${it.base}/${it.symbol}" }
+                    ) { rate ->
+                        RatesCard(
+                            modifier = Modifier
+                                .animateItem(),
+                            title = "${rate.base}/${rate.symbol}",
+                            rate = rate.rate,
+                            isFavorite = true,
+                            onFavoriteClick = {
+                                onEvent(FavoritesScreenEvent.RemoveFromFavorites(rate))
                             }
-                        }
+                        )
                     }
                 }
             }
         }
     }
 }
+
+// todo add preview

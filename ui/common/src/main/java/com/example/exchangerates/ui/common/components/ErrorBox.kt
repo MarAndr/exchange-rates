@@ -1,4 +1,4 @@
-package com.example.exchangerates.ui.common
+package com.example.exchangerates.ui.common.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,12 +14,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.exchangerates.ui.common.R
 import com.example.exchangerates.ui.common.theme.AppTheme
 
 @Composable
 fun ErrorBox(
     modifier: Modifier = Modifier,
-    onReplyButtonClick: () -> Unit,
+    onRetryButtonClick: () -> Unit,
 ){
     Box(
         modifier = modifier.fillMaxSize(),
@@ -42,7 +43,7 @@ fun ErrorBox(
                     disabledContainerColor = AppTheme.color.mainColors.textDefault,
                     disabledContentColor = AppTheme.color.mainColors.secondary
                 ),
-                onClick = onReplyButtonClick
+                onClick = onRetryButtonClick
             ) {
                 Text(text = stringResource(R.string.refresh))
             }

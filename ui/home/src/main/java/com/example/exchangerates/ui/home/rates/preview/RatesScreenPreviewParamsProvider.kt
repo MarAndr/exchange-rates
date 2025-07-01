@@ -29,15 +29,21 @@ internal class RatesScreenPreviewParamsProvider : PreviewParameterProvider<Rates
     override val values = sequenceOf(
         RatesScreenState.Loading,
         RatesScreenState.Error,
-        RatesScreenState.Success(
+        RatesScreenState.Data(
             baseCurrency = "USD",
             rates = mockRates,
             availableCurrencies = emptyList()
         ),
-        RatesScreenState.Success(
+        RatesScreenState.Data(
             baseCurrency = "USD",
             rates = mockRates.take(1),
             availableCurrencies = emptyList()
+        ),
+        RatesScreenState.Data(
+            baseCurrency = "USD",
+            rates = emptyList(),
+            availableCurrencies = emptyList(),
+            isError = true,
         ),
     )
 }

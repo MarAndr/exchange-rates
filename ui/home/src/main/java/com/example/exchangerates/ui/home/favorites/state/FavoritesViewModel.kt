@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -49,52 +50,66 @@ class FavoritesViewModel @Inject constructor(
         getFavoritePairs(),
         favoritesRefreshable.flow,
     ) { favoritePairs, ratesItemsState ->
-        val ratesItems = ratesItemsState as? RefreshLoadingState.Data
-        val favoriteRates = favoritePairs.map {
-            FavoriteRateUiModel(
-                base = it.baseCurrency,
-                symbol = it.targetCurrency,
-                rate = null,
-            )
-        }.map { favoriteUiModel ->
-            if (ratesItems == null) {
-                favoriteUiModel
-            } else {
-                val rate = ratesItems.data
-                    .find { it.base == favoriteUiModel.base && it.symbol == favoriteUiModel.symbol }
-                    ?.rate
-                favoriteUiModel.copy(
-                    rate = rate,
-                )
-            }
-        }
-        FavoritesScreenState.Data(
+        val favoriteRates = getFavoriteRates(
+            ratesItemsState = ratesItemsState,
+            favoritePairs = favoritePairs,
+        )
+        FavoritesScreenState(
             favoriteRates = favoriteRates,
             isLoading = ratesItemsState.isLoading(),
         )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.Lazily,
-        initialValue = FavoritesScreenState.Data(favoriteRates = emptyList()),
+        initialValue = FavoritesScreenState(favoriteRates = emptyList()),
     )
+
+    private suspend fun getFavoriteRates(
+        ratesItemsState: RefreshLoadingState<List<RatesItem>>,
+        favoritePairs: List<FavoritePair>
+    ): List<FavoriteRateUiModel> = withContext(ioDispatcher) {
+        val ratesItems = ratesItemsState as? RefreshLoadingState.Data
+        val favoriteRates = favoritePairs
+            .sortedBy { "${it.baseCurrency}/${it.targetCurrency}" } // alphabetic
+            .map {
+                FavoriteRateUiModel(
+                    base = it.baseCurrency,
+                    symbol = it.targetCurrency,
+                    rate = null,
+                )
+            }.map { favoriteUiModel ->
+                if (ratesItems == null) {
+                    favoriteUiModel
+                } else {
+                    val rate = ratesItems.data
+                        .find { it.base == favoriteUiModel.base && it.symbol == favoriteUiModel.symbol }
+                        ?.rate
+                    favoriteUiModel.copy(
+                        rate = rate,
+                    )
+                }
+            }
+        return@withContext favoriteRates
+    }
 
     private fun fetchRates(baseGrouped: Map<String, List<FavoritePair>>) =
         combine(baseGrouped.map { (base, targets) ->
             getLatestRates(base, targets.map { it.targetCurrency })
         }) { loadingStates ->
-            val errors = loadingStates.filterIsInstance<LoadingState.Error>()
-            val loadings = loadingStates.filterIsInstance<LoadingState.Loading>()
+            val errors =
+                loadingStates.filterIsInstance<LoadingState.Error>()
+            val loadings =
+                loadingStates.filterIsInstance<LoadingState.Loading>()
             val successes =
                 loadingStates.filterIsInstance<LoadingState.Success<List<RatesItem>>>()
             when {
-                errors.isNotEmpty() -> LoadingState.Error
                 loadings.isNotEmpty() -> LoadingState.Loading
+                errors.size == loadingStates.size -> LoadingState.Error
                 else -> {
                     val rates: List<RatesItem> = successes
-                        .fold<LoadingState.Success<List<RatesItem>>, List<RatesItem>>(emptyList()) { list, success ->
+                        .fold(emptyList()) { list, success ->
                             list + success.data
                         }
-                        .sortedBy { "${it.base}/${it.symbol}" } // alphabetic
                     LoadingState.Success(rates)
                 }
             }

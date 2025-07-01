@@ -11,5 +11,6 @@
     <string name="currencies_title">Currencies</string>
     <string name="favorites_title">Favorites</string>
     <string name="error_occurred_try_again">An error occurred. Please try again</string>
+    <string name="favorites_list_empty">There are no favorite pairs added.\nPlease add them from the Currencies screen</string>
     <string name="refresh">Refresh</string>
 </resources>
