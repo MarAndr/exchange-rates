@@ -144,43 +144,29 @@ private fun RatesScreen(
 
                         Spacer(Modifier.height(12.dp))
 
-                        when {
-                            screenState.isRefreshing && screenState.rates.isEmpty() -> {
-                                Unit
-                            }
-
-                            screenState.isError && screenState.rates.isEmpty() -> {
-                                ErrorBox {
-                                    onEvent(RatesScreenEvent.OnRefresh)
-                                }
-                            }
-
-                            else -> {
-                                LazyColumn(
-                                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                                    contentPadding = PaddingValues(horizontal = 16.dp),
-                                ) {
-                                    items(
-                                        items = screenState.rates,
-                                        key = { it.symbol }
-                                    ) { rates ->
-                                        RatesCard(
-                                            modifier = Modifier
-                                                .animateItem(),
-                                            title = rates.symbol,
-                                            rate = rates.rate,
-                                            isFavorite = rates.isFavorite,
-                                            onFavoriteClick = {
-                                                onEvent(
-                                                    RatesScreenEvent.OnFavoriteClick(
-                                                        rate = rates,
-                                                        wasFavorite = rates.isFavorite,
-                                                    )
-                                                )
-                                            }
+                        LazyColumn(
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            contentPadding = PaddingValues(horizontal = 16.dp),
+                        ) {
+                            items(
+                                items = screenState.rates,
+                                key = { it.symbol }
+                            ) { rates ->
+                                RatesCard(
+                                    modifier = Modifier
+                                        .animateItem(),
+                                    title = rates.symbol,
+                                    rate = rates.rate,
+                                    isFavorite = rates.isFavorite,
+                                    onFavoriteClick = {
+                                        onEvent(
+                                            RatesScreenEvent.OnFavoriteClick(
+                                                rate = rates,
+                                                wasFavorite = rates.isFavorite,
+                                            )
                                         )
                                     }
-                                }
+                                )
                             }
                         }
                     }

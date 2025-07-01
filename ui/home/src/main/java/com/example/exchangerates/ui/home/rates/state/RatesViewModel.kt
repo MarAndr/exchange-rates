@@ -16,18 +16,24 @@ import com.example.exchangerates.features.rates.usecases.GetLatestRatesUseCase
 import com.example.exchangerates.ui.common.navigation.AppNavigator
 import com.example.exchangerates.ui.common.navigation.Destination
 import com.example.exchangerates.ui.common.state.RefreshLoadingState
+import com.example.exchangerates.ui.common.state.aggregateEventsToRefreshLoadingState
 import com.example.exchangerates.ui.common.state.refreshable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -47,13 +53,12 @@ class RatesViewModel @Inject constructor(
     private val baseCurrency: MutableStateFlow<String?> = MutableStateFlow(null)
     private val sortOption: MutableStateFlow<SortOption> = MutableStateFlow(SortOption.CodeAZ)
 
-    private val ratesRefreshable = refreshable {
-        baseCurrency
-            .filterNotNull()
-            .flatMapLatest { baseCurrency ->
-                getLatestRates(baseCurrency)
-            }
-            .onStart { emit(LoadingState.Loading) }
+    private val ratesRefreshable = refreshable(baseCurrency) { baseCurrency ->
+        if (baseCurrency == null) {
+            flowOf(LoadingState.Loading)
+        } else {
+            getLatestRates(baseCurrency)
+        }
     }
 
     private val currenciesRefreshable = refreshable {
@@ -80,25 +85,21 @@ class RatesViewModel @Inject constructor(
                     RefreshLoadingState.Initial.Loading -> RatesScreenState.Loading
                     RefreshLoadingState.Initial.Error -> RatesScreenState.Error
                     is RefreshLoadingState.Data -> {
-                        val rates = if (ratesState.isError) {
-                            emptyList() // when an error occurred while changing currency
-                        } else {
-                            ratesState.data.map { rate ->
-                                val isFavorite = favoritePairs
-                                    .find { it.baseCurrency == baseCurrency && it.targetCurrency == rate.symbol } != null
-                                RatesUiModel(
-                                    base = baseCurrency.orEmpty(),
-                                    symbol = rate.symbol,
-                                    rate = rate.rate,
-                                    isFavorite = isFavorite,
-                                )
-                            }.let { ratesList ->
-                                when (currentSortOption) {
-                                    SortOption.CodeAZ -> ratesList.sortedBy { it.symbol }
-                                    SortOption.CodeZA -> ratesList.sortedByDescending { it.symbol }
-                                    SortOption.QuoteAsc -> ratesList.sortedBy { it.rate }
-                                    SortOption.QuoteDesc -> ratesList.sortedByDescending { it.rate }
-                                }
+                        val rates = ratesState.data.map { rate ->
+                            val isFavorite = favoritePairs
+                                .find { it.baseCurrency == baseCurrency && it.targetCurrency == rate.symbol } != null
+                            RatesUiModel(
+                                base = baseCurrency.orEmpty(),
+                                symbol = rate.symbol,
+                                rate = rate.rate,
+                                isFavorite = isFavorite,
+                            )
+                        }.let { ratesList ->
+                            when (currentSortOption) {
+                                SortOption.CodeAZ -> ratesList.sortedBy { it.symbol }
+                                SortOption.CodeZA -> ratesList.sortedByDescending { it.symbol }
+                                SortOption.QuoteAsc -> ratesList.sortedBy { it.rate }
+                                SortOption.QuoteDesc -> ratesList.sortedByDescending { it.rate }
                             }
                         }
 

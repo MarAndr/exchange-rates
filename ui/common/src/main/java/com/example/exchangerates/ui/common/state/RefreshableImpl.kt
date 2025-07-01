@@ -10,24 +10,41 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 
-fun <T> ViewModel.refreshable(createFlow: () -> Flow<LoadingState<T>>): Refreshable<T> =
+fun <T> ViewModel.refreshable(
+    createFlow: () -> Flow<LoadingState<T>>,
+): Refreshable<T> =
+    RefreshableImpl(
+        scope = viewModelScope,
+        started = SharingStarted.Lazily,
+        initialValue = RefreshLoadingState.Initial.Loading,
+        createFlow = { createFlow() },
+        paramFlow = flowOf(Unit),
+    )
+
+fun <T, P> ViewModel.refreshable(
+    paramFlow: Flow<P>,
+    createFlow: (p: P) -> Flow<LoadingState<T>>,
+): Refreshable<T> =
     RefreshableImpl(
         scope = viewModelScope,
         started = SharingStarted.Lazily,
         initialValue = RefreshLoadingState.Initial.Loading,
         createFlow = createFlow,
+        paramFlow = paramFlow,
     )
 
-private class RefreshableImpl<T>(
+private class RefreshableImpl<P, T>(
     private val scope: CoroutineScope,
     started: SharingStarted,
     initialValue: RefreshLoadingState<T>,
-    createFlow: () -> Flow<LoadingState<T>>,
+    paramFlow: Flow<P>,
+    createFlow: (p: P) -> Flow<LoadingState<T>>,
 ) : Refreshable<T> {
 
     private val refreshTrigger = MutableSharedFlow<Unit>(replay = 1).apply {
@@ -36,9 +53,12 @@ private class RefreshableImpl<T>(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override val flow = refreshTrigger
-        .flatMapLatest { createFlow() }
-        .aggregateEventsToRefreshLoadingState()
+    override val flow = paramFlow
+        .flatMapLatest { param ->
+            refreshTrigger
+                .flatMapLatest { createFlow(param) }
+                .aggregateEventsToRefreshLoadingState()
+        }
         .stateIn(
             scope = scope,
             started = started,
@@ -52,7 +72,7 @@ private class RefreshableImpl<T>(
     }
 }
 
-internal fun <T> Flow<LoadingState<T>>.aggregateEventsToRefreshLoadingState(): Flow<RefreshLoadingState<T>> =
+fun <T> Flow<LoadingState<T>>.aggregateEventsToRefreshLoadingState(): Flow<RefreshLoadingState<T>> =
     runningFold<LoadingState<T>, RefreshLoadingState<T>>(
         initial = RefreshLoadingState.Initial.Loading,
     ) { accumulator, value ->

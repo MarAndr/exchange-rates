@@ -35,7 +35,6 @@ fun RatesCard(
     title: String,
     rate: Double?,
     isFavorite: Boolean,
-    isLoading: Boolean = false,
     onFavoriteClick: () -> Unit
 ) {
     val appColors = AppTheme.color
