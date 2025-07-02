@@ -19,3 +19,7 @@ sealed interface RefreshLoadingState<out T> {
 fun <T> RefreshLoadingState<T>.isLoading() =
     this is RefreshLoadingState.Initial.Loading ||
             (this is RefreshLoadingState.Data && this.isLoading)
+
+fun <T> RefreshLoadingState<T>.isError() =
+    this is RefreshLoadingState.Initial.Error ||
+            (this is RefreshLoadingState.Data && this.isError)

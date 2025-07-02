@@ -16,24 +16,18 @@ import com.example.exchangerates.features.rates.usecases.GetLatestRatesUseCase
 import com.example.exchangerates.ui.common.navigation.AppNavigator
 import com.example.exchangerates.ui.common.navigation.Destination
 import com.example.exchangerates.ui.common.state.RefreshLoadingState
-import com.example.exchangerates.ui.common.state.aggregateEventsToRefreshLoadingState
+import com.example.exchangerates.ui.common.state.isError
+import com.example.exchangerates.ui.common.state.isLoading
 import com.example.exchangerates.ui.common.state.refreshable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -81,37 +75,33 @@ class RatesViewModel @Inject constructor(
             RefreshLoadingState.Initial.Loading -> RatesScreenState.Loading
             RefreshLoadingState.Initial.Error -> RatesScreenState.Error
             is RefreshLoadingState.Data -> {
-                when (ratesState) {
-                    RefreshLoadingState.Initial.Loading -> RatesScreenState.Loading
-                    RefreshLoadingState.Initial.Error -> RatesScreenState.Error
-                    is RefreshLoadingState.Data -> {
-                        val rates = ratesState.data.map { rate ->
-                            val isFavorite = favoritePairs
-                                .find { it.baseCurrency == baseCurrency && it.targetCurrency == rate.symbol } != null
-                            RatesUiModel(
-                                base = baseCurrency.orEmpty(),
-                                symbol = rate.symbol,
-                                rate = rate.rate,
-                                isFavorite = isFavorite,
-                            )
-                        }.let { ratesList ->
-                            when (currentSortOption) {
-                                SortOption.CodeAZ -> ratesList.sortedBy { it.symbol }
-                                SortOption.CodeZA -> ratesList.sortedByDescending { it.symbol }
-                                SortOption.QuoteAsc -> ratesList.sortedBy { it.rate }
-                                SortOption.QuoteDesc -> ratesList.sortedByDescending { it.rate }
-                            }
-                        }
-
-                        RatesScreenState.Data(
-                            baseCurrency = baseCurrency.orEmpty(),
-                            rates = rates,
-                            availableCurrencies = currenciesState.data,
-                            isRefreshing = ratesState.isLoading || currenciesState.isLoading,
-                            isError = ratesState.isError,
+                val rates = (ratesState as? RefreshLoadingState.Data)?.data
+                    ?.map { rate ->
+                        val isFavorite = favoritePairs
+                            .find { it.baseCurrency == baseCurrency && it.targetCurrency == rate.symbol } != null
+                        RatesUiModel(
+                            base = baseCurrency.orEmpty(),
+                            symbol = rate.symbol,
+                            rate = rate.rate,
+                            isFavorite = isFavorite,
                         )
+                    }?.let { ratesList ->
+                        when (currentSortOption) {
+                            SortOption.CodeAZ -> ratesList.sortedBy { it.symbol }
+                            SortOption.CodeZA -> ratesList.sortedByDescending { it.symbol }
+                            SortOption.QuoteAsc -> ratesList.sortedBy { it.rate }
+                            SortOption.QuoteDesc -> ratesList.sortedByDescending { it.rate }
+                        }
                     }
-                }
+                    .orEmpty()
+
+                RatesScreenState.Data(
+                    baseCurrency = baseCurrency.orEmpty(),
+                    rates = rates,
+                    availableCurrencies = currenciesState.data,
+                    isRefreshing = ratesState.isLoading() || currenciesState.isLoading,
+                    isError = ratesState.isError(),
+                )
             }
         }
     }.stateIn(
