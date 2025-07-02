@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.example.exchangerates.ui.home.rates
+package com.example.exchangerates.ui.home.rates.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -45,7 +45,7 @@ import com.example.exchangerates.features.rates.entities.CurrencySymbol
 import com.example.exchangerates.ui.common.theme.AppTheme
 
 @Composable
-fun CurrencySelector(
+internal fun CurrencySelector(
     baseCurrency: CurrencySymbol,
     availableCurrencies: List<Currency>,
     onBaseCurrencyChanged: (CurrencySymbol) -> Unit,

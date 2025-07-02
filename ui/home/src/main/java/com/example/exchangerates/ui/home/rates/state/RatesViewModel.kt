@@ -100,6 +100,7 @@ class RatesViewModel @Inject constructor(
                     baseCurrency = baseCurrency ?: CurrencySymbol(""),
                     rates = rates,
                     availableCurrencies = currenciesState.data,
+                    sortOption = currentSortOption,
                     isRefreshing = ratesState.isLoading() || currenciesState.isLoading,
                     isError = ratesState.isError(),
                 )

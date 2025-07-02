@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,10 +26,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.exchangerates.ui.common.R
 import com.example.exchangerates.features.filters.entities.SortOption
-import com.example.exchangerates.ui.filters.components.SortOptions
+import com.example.exchangerates.ui.common.R
 import com.example.exchangerates.ui.common.theme.AppTheme
+import com.example.exchangerates.ui.filters.components.SortOptions
 import com.example.exchangerates.ui.filters.state.FiltersScreenEvent
 import com.example.exchangerates.ui.filters.state.FiltersScreenState
 import com.example.exchangerates.ui.filters.state.FiltersViewModel
@@ -98,7 +98,7 @@ fun FiltersScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                colors = ButtonColors(
+                colors = ButtonDefaults.buttonColors(
                     containerColor = AppTheme.color.mainColors.primary,
                     contentColor = AppTheme.color.mainColors.onPrimary,
                     disabledContainerColor = AppTheme.color.mainColors.textDefault,

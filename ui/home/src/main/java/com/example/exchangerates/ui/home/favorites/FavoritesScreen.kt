@@ -18,12 +18,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -35,12 +31,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.exchangerates.ui.common.R
 import com.example.exchangerates.ui.common.components.EmptyStateBox
+import com.example.exchangerates.ui.common.components.loading.AppPullToRefreshBox
 import com.example.exchangerates.ui.common.theme.AppTheme
 import com.example.exchangerates.ui.home.favorites.preview.FavoritesScreenPreviewParamsProvider
 import com.example.exchangerates.ui.home.favorites.state.FavoritesScreenEvent
 import com.example.exchangerates.ui.home.favorites.state.FavoritesScreenState
 import com.example.exchangerates.ui.home.favorites.state.FavoritesViewModel
-import com.example.exchangerates.ui.home.rates.RatesCard
+import com.example.exchangerates.ui.home.components.RatesCard
 
 @Composable
 fun FavoritesScreen(
@@ -80,52 +77,52 @@ private fun FavoritesScreen(
         contentWindowInsets = WindowInsets.safeDrawing
             .exclude(WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)),
     ) { paddingValues ->
-        val refreshState = rememberPullToRefreshState()
-        PullToRefreshBox(
+        AppPullToRefreshBox(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
-            state = refreshState,
-            isRefreshing = screenState.isLoading,
+            isLoading = screenState.isLoading,
             onRefresh = { onEvent(FavoritesScreenEvent.OnRefresh) },
-            indicator = {
-                Indicator(
-                    modifier = Modifier.align(Alignment.TopCenter),
-                    isRefreshing = screenState.isLoading,
-                    state = refreshState,
-                    containerColor = AppTheme.color.bg.default,
-                    color = AppTheme.color.mainColors.primary,
-                )
-            },
         ) {
             if (screenState.favoriteRates.isEmpty()) {
                 EmptyStateBox()
             } else {
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = PaddingValues(
-                        top = 16.dp,
-                        start = 16.dp,
-                        end = 16.dp,
-                    )
-                ) {
-                    items(
-                        items = screenState.favoriteRates,
-                        key = { "${it.base}/${it.symbol}" }
-                    ) { rate ->
-                        RatesCard(
-                            modifier = Modifier
-                                .animateItem(),
-                            title = "${rate.base}/${rate.symbol}",
-                            rate = rate.rate,
-                            isFavorite = true,
-                            onFavoriteClick = {
-                                onEvent(FavoritesScreenEvent.RemoveFromFavorites(rate))
-                            }
-                        )
-                    }
-                }
+                FavoriteRatesList(
+                    screenState = screenState,
+                    onEvent = onEvent,
+                )
             }
+        }
+    }
+}
+
+@Composable
+private fun FavoriteRatesList(
+    screenState: FavoritesScreenState,
+    onEvent: (FavoritesScreenEvent) -> Unit
+) {
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(
+            top = 16.dp,
+            start = 16.dp,
+            end = 16.dp,
+        )
+    ) {
+        items(
+            items = screenState.favoriteRates,
+            key = { "${it.base}/${it.symbol}" }
+        ) { rate ->
+            RatesCard(
+                modifier = Modifier
+                    .animateItem(),
+                title = "${rate.base}/${rate.symbol}",
+                rate = rate.rate,
+                isFavorite = true,
+                onFavoriteClick = {
+                    onEvent(FavoritesScreenEvent.RemoveFromFavorites(rate))
+                }
+            )
         }
     }
 }

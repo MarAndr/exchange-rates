@@ -1,6 +1,7 @@
 package com.example.exchangerates.ui.home.rates.preview
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import com.example.exchangerates.features.filters.entities.SortOption
 import com.example.exchangerates.features.rates.entities.CurrencySymbol
 import com.example.exchangerates.ui.home.rates.state.RatesScreenState
 import com.example.exchangerates.ui.home.rates.state.RatesUiModel
@@ -33,18 +34,27 @@ internal class RatesScreenPreviewParamsProvider : PreviewParameterProvider<Rates
         RatesScreenState.Data(
             baseCurrency = CurrencySymbol("USD"),
             rates = mockRates,
-            availableCurrencies = emptyList()
+            availableCurrencies = emptyList(),
+            sortOption = SortOption.CodeAZ
+        ),
+        RatesScreenState.Data(
+            baseCurrency = CurrencySymbol("USD"),
+            rates = emptyList(),
+            availableCurrencies = emptyList(),
+            sortOption = SortOption.CodeAZ
         ),
         RatesScreenState.Data(
             baseCurrency = CurrencySymbol("USD"),
             rates = mockRates.take(1),
-            availableCurrencies = emptyList()
+            availableCurrencies = emptyList(),
+            sortOption = SortOption.CodeAZ
         ),
         RatesScreenState.Data(
             baseCurrency = CurrencySymbol("USD"),
             rates = emptyList(),
             availableCurrencies = emptyList(),
             isError = true,
+            sortOption = SortOption.CodeAZ
         ),
     )
 }
