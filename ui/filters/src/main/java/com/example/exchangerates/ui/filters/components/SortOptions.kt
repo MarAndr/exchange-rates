@@ -42,7 +42,6 @@ internal fun SortOptions(
                 fontWeight = FontWeight.Bold,
                 color = AppTheme.color.mainColors.textSecondary,
             ),
-            // todo use styles in place
             fontSize = 12.sp,
         )
 
