@@ -7,6 +7,7 @@ import com.example.exchangerates.core.loading.LoadingState
 import com.example.exchangerates.features.favorites.entities.FavoritePair
 import com.example.exchangerates.features.favorites.usecases.GetFavoritePairsUseCase
 import com.example.exchangerates.features.favorites.usecases.RemoveFavoritePairUseCase
+import com.example.exchangerates.features.rates.entities.CurrencySymbol
 import com.example.exchangerates.features.rates.entities.RatesItem
 import com.example.exchangerates.features.rates.usecases.GetLatestRatesUseCase
 import com.example.exchangerates.ui.common.state.RefreshLoadingState
@@ -92,7 +93,7 @@ class FavoritesViewModel @Inject constructor(
         return@withContext favoriteRates
     }
 
-    private fun fetchRates(baseGrouped: Map<String, List<FavoritePair>>) =
+    private fun fetchRates(baseGrouped: Map<CurrencySymbol, List<FavoritePair>>) =
         combine(baseGrouped.map { (base, targets) ->
             getLatestRates(base, targets.map { it.targetCurrency })
         }) { loadingStates ->

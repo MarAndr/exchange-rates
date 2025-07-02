@@ -4,6 +4,7 @@ import com.example.exchangerates.core.remote.calls.apiCall
 import com.example.exchangerates.core.loading.LoadingState
 import com.example.exchangerates.features.rates.data.mapper.RatesMapper
 import com.example.exchangerates.features.rates.entities.Currency
+import com.example.exchangerates.features.rates.entities.CurrencySymbol
 import com.example.exchangerates.features.rates.entities.RatesItem
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -13,15 +14,15 @@ internal class RatesRemoteDataSourceImpl @Inject constructor(
 ) : RatesRemoteDataSource {
 
     override fun getLatestRates(
-        baseCurrency: String,
-        targetCurrencies: List<String>,
+        baseCurrency: CurrencySymbol,
+        targetCurrencies: List<CurrencySymbol>,
     ) = apiCall(
         mapper = { rates ->
             RatesMapper.mapRateDtoToRatesItems(rates)
         },
         call = {
-            val targetCurrenciesList = targetCurrencies.joinToString(",")
-            exchangeApi.getLatestCurrency(baseCurrency, targetCurrenciesList)
+            val targetCurrenciesList = targetCurrencies.joinToString(",") { it.value }
+            exchangeApi.getLatestCurrency(baseCurrency.value, targetCurrenciesList)
         },
     )
 

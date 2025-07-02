@@ -41,13 +41,14 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.example.exchangerates.ui.common.R
 import com.example.exchangerates.features.rates.entities.Currency
+import com.example.exchangerates.features.rates.entities.CurrencySymbol
 import com.example.exchangerates.ui.common.theme.AppTheme
 
 @Composable
 fun CurrencySelector(
-    baseCurrency: String,
+    baseCurrency: CurrencySymbol,
     availableCurrencies: List<Currency>,
-    onBaseCurrencyChanged: (String) -> Unit,
+    onBaseCurrencyChanged: (CurrencySymbol) -> Unit,
     onFilterClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -94,7 +95,7 @@ fun CurrencySelector(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = baseCurrency,
+                    text = baseCurrency.value,
                     modifier = Modifier.weight(1f),
                     color = AppTheme.color.mainColors.textDefault,
                 )
@@ -120,7 +121,7 @@ fun CurrencySelector(
                 ) {
                     items(availableCurrencies) { currency ->
                         DropdownMenuItem(
-                            text = { Text(currency.symbol) },
+                            text = { Text(currency.symbol.value) },
                             colors = MenuDefaults.itemColors(
                                 textColor = AppTheme.color.mainColors.textDefault,
                             ),
@@ -169,10 +170,10 @@ fun CurrencySelector(
 fun CurrencySelectorPreview() {
     AppTheme {
         CurrencySelector(
-            baseCurrency = "USD",
+            baseCurrency = CurrencySymbol("USD"),
             availableCurrencies = listOf(
-                Currency("US Dollar", "USD"),
-                Currency("Euro", "EUR")
+                Currency("US Dollar", CurrencySymbol("USD")),
+                Currency("Euro", CurrencySymbol("EUR"))
             ),
             onBaseCurrencyChanged = {},
             onFilterClick = {}

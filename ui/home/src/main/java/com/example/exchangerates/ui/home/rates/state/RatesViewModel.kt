@@ -11,6 +11,7 @@ import com.example.exchangerates.features.favorites.usecases.AddFavoritePairUseC
 import com.example.exchangerates.features.favorites.usecases.GetFavoritePairsUseCase
 import com.example.exchangerates.features.favorites.usecases.RemoveFavoritePairUseCase
 import com.example.exchangerates.features.filters.entities.SortOption
+import com.example.exchangerates.features.rates.entities.CurrencySymbol
 import com.example.exchangerates.features.rates.usecases.GetCurrenciesListUseCase
 import com.example.exchangerates.features.rates.usecases.GetLatestRatesUseCase
 import com.example.exchangerates.ui.common.navigation.AppNavigator
@@ -44,7 +45,7 @@ class RatesViewModel @Inject constructor(
     private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
-    private val baseCurrency: MutableStateFlow<String?> = MutableStateFlow(null)
+    private val baseCurrency: MutableStateFlow<CurrencySymbol?> = MutableStateFlow(null)
     private val sortOption: MutableStateFlow<SortOption> = MutableStateFlow(SortOption.CodeAZ)
 
     private val ratesRefreshable = refreshable(baseCurrency) { baseCurrency ->
@@ -80,15 +81,15 @@ class RatesViewModel @Inject constructor(
                         val isFavorite = favoritePairs
                             .find { it.baseCurrency == baseCurrency && it.targetCurrency == rate.symbol } != null
                         RatesUiModel(
-                            base = baseCurrency.orEmpty(),
+                            base = rate.base,
                             symbol = rate.symbol,
                             rate = rate.rate,
                             isFavorite = isFavorite,
                         )
                     }?.let { ratesList ->
                         when (currentSortOption) {
-                            SortOption.CodeAZ -> ratesList.sortedBy { it.symbol }
-                            SortOption.CodeZA -> ratesList.sortedByDescending { it.symbol }
+                            SortOption.CodeAZ -> ratesList.sortedBy { it.symbol.value }
+                            SortOption.CodeZA -> ratesList.sortedByDescending { it.symbol.value }
                             SortOption.QuoteAsc -> ratesList.sortedBy { it.rate }
                             SortOption.QuoteDesc -> ratesList.sortedByDescending { it.rate }
                         }
@@ -96,7 +97,7 @@ class RatesViewModel @Inject constructor(
                     .orEmpty()
 
                 RatesScreenState.Data(
-                    baseCurrency = baseCurrency.orEmpty(),
+                    baseCurrency = baseCurrency ?: CurrencySymbol(""),
                     rates = rates,
                     availableCurrencies = currenciesState.data,
                     isRefreshing = ratesState.isLoading() || currenciesState.isLoading,

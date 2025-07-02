@@ -155,12 +155,12 @@ private fun RatesScreen(
                             ) {
                                 items(
                                     items = screenState.rates,
-                                    key = { it.symbol }
+                                    key = { it.symbol.value }
                                 ) { rates ->
                                     RatesCard(
                                         modifier = Modifier
                                             .animateItem(),
-                                        title = rates.symbol,
+                                        title = rates.symbol.value,
                                         rate = rates.rate,
                                         isFavorite = rates.isFavorite,
                                         onFavoriteClick = {

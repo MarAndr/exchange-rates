@@ -29,6 +29,7 @@ dependencies {
 
     implementation(project(":features:favorites:abstractions"))
     api(project(":features:favorites:entities"))
+    api(project(":features:rates:entities"))
 
     implementation(libs.hilt.android)
     implementation(libs.androidx.room.common.jvm)

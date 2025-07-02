@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
@@ -10,6 +11,29 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/core" />
+            <option value="$PROJECT_DIR$/core/dispatchers" />
+            <option value="$PROJECT_DIR$/core/internal" />
+            <option value="$PROJECT_DIR$/core/internal/db" />
+            <option value="$PROJECT_DIR$/core/loading" />
+            <option value="$PROJECT_DIR$/core/remote" />
+            <option value="$PROJECT_DIR$/features" />
+            <option value="$PROJECT_DIR$/features/favorites" />
+            <option value="$PROJECT_DIR$/features/favorites/abstractions" />
+            <option value="$PROJECT_DIR$/features/favorites/data" />
+            <option value="$PROJECT_DIR$/features/favorites/entities" />
+            <option value="$PROJECT_DIR$/features/favorites/usecases" />
+            <option value="$PROJECT_DIR$/features/filters" />
+            <option value="$PROJECT_DIR$/features/filters/entities" />
+            <option value="$PROJECT_DIR$/features/rates" />
+            <option value="$PROJECT_DIR$/features/rates/abstractions" />
+            <option value="$PROJECT_DIR$/features/rates/data" />
+            <option value="$PROJECT_DIR$/features/rates/entities" />
+            <option value="$PROJECT_DIR$/features/rates/usecases" />
+            <option value="$PROJECT_DIR$/ui" />
+            <option value="$PROJECT_DIR$/ui/common" />
+            <option value="$PROJECT_DIR$/ui/filters" />
+            <option value="$PROJECT_DIR$/ui/home" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

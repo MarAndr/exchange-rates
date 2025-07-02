@@ -3,6 +3,7 @@ package com.example.exchangerates.features.rates.data.mapper
 import com.example.exchangerates.features.rates.data.remote.model.CurrencyListDto
 import com.example.exchangerates.features.rates.data.remote.model.RateDto
 import com.example.exchangerates.features.rates.entities.Currency
+import com.example.exchangerates.features.rates.entities.CurrencySymbol
 import com.example.exchangerates.features.rates.entities.RatesItem
 
 internal object RatesMapper {
@@ -10,8 +11,8 @@ internal object RatesMapper {
     fun mapRateDtoToRatesItems(rateDto: RateDto): List<RatesItem> {
         return rateDto.rates.map { (symbol, rate) ->
             RatesItem(
-                base = rateDto.base.orEmpty(),
-                symbol = symbol,
+                base = CurrencySymbol(rateDto.base.orEmpty()),
+                symbol = CurrencySymbol(symbol),
                 rate = rate,
             )
         }
@@ -21,7 +22,7 @@ internal object RatesMapper {
         return currencyListDto.symbols?.map { (symbol, name) ->
             Currency(
                 name = name,
-                symbol = symbol
+                symbol = CurrencySymbol(symbol)
             )
         } ?: emptyList()
     }
